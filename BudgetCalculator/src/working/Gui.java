@@ -45,16 +45,17 @@ public class Gui extends JFrame {
 	
 	//Sets the icon of the application in the top left of the window
 	private static void SetWindowIcon(JFrame frame) {
-		Image icon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\joeyc\\Pictures\\Wallpapers\\abstract2.png");
+		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
 		frame.setIconImage(icon);
 		
 	}
 		
 	//Creates the menu bar
+	//NEED TO ADD MANUAL
 	private static void CreateMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem manualItem = new JMenuItem("Manual");
-		File manualFile = new File("C:\\Users\\joeyc\\Desktop\\budgetCalculatorManual.txt");
+		File manualFile = new File("BUDGET CALCULATOR MANUAL");
 		Desktop desktop = Desktop.getDesktop();
 		
 		manualItem.addActionListener((event) -> {
@@ -181,12 +182,12 @@ public class Gui extends JFrame {
 		TreeMap<Integer,String> treeMapOfExpenseHashTable = new TreeMap<Integer,String>(expenseHashTableForLineChart);
 		
 		Set<Integer> hash_set = treeMapOfExpenseHashTable.keySet();
-		Iterator<Integer> iteratorForHashTable = hash_set.iterator();
+		Iterator<Integer> iteratorForSet = hash_set.iterator();
 		
 		
-		while(iteratorForHashTable.hasNext()) {
+		while(iteratorForSet.hasNext()) {
 			
-			int key = iteratorForHashTable.next();
+			int key = iteratorForSet.next();
 			String[] hashValue = expenseHashTableForLineChart.get(key).split(":");
 			float amount = Float.parseFloat(hashValue[0]);
 			String date = hashValue[1];

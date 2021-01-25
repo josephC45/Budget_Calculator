@@ -11,9 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-/*
- * Operations class
- */
+//Operations class
 public class Ops {
 		
 	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<Character,ArrayList<Ledger>>();

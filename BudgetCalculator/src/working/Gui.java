@@ -37,7 +37,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 public class Gui extends JFrame {
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 572773041325318728L;
 	
 	private static JTextField transactionField = new JTextField(15);
 	private static JTextField fileTxtField = new JTextField(25);
@@ -63,6 +63,7 @@ public class Gui extends JFrame {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println("--- IOException occurred in the CreateMenuBar method.");
 			}
 		});
 		
@@ -100,6 +101,7 @@ public class Gui extends JFrame {
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
+					System.out.println("--- Exception (dealing with file) occurred in the AddChooseFileButtonFunctionality method.");
 				}
 		        
 			}//end actionPerformed
@@ -219,6 +221,7 @@ public class Gui extends JFrame {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					System.out.println("--- IOException occurred in the FooterWriteButtonFunctionality method.");
 				}
 				transactionField.setText("");
 			}

@@ -124,9 +124,8 @@ public class Ops {
 		    
 		} catch (IOException ex) {
 		    ex.printStackTrace();
-		    System.out.println("Error occurred in parsecsv method due to an IOException.");
+		    System.out.println("--- IOException occurred in ParseTxt method.");
 		}
-		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
 		return null;
 	}
@@ -168,36 +167,44 @@ public class Ops {
 		
 	}
 	
+	//Gets total expenses for the month.
 	private static float TotalMonthlyExpenses(ArrayList<Ledger> expenses) {
 		float monthlyExpenses = 0;
 		for(Ledger transaction : expenses) {
 			monthlyExpenses += transaction.GetTransactionAmount();
 		}
 		return monthlyExpenses;
+		
 	}
 	
+	//Gets total savings for the month.
 	private static float TotalMonthlySavings(ArrayList<Ledger> savings) {
 		float monthlySavings = 0;
 		for(Ledger transaction : savings) {
 			monthlySavings += transaction.GetTransactionAmount();
 		}
 		return monthlySavings;
+		
 	}
 	
+	//Gets total investment amount for the month.
 	private static float TotalMonthlyInvestments(ArrayList<Ledger> investments) {
 		float monthlyInvestments = 0;
 		for(Ledger transaction : investments) {
 			monthlyInvestments += transaction.GetTransactionAmount();
 		}
 		return monthlyInvestments;
+		
 	}
 	
+	//Gets total money set aside for emergencies for the month.
 	private static float TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
 		float monthlyEmergencySetAside = 0;
 		for(Ledger transaction : emergencies) {
 			monthlyEmergencySetAside += transaction.GetTransactionAmount();
 		}
 		return monthlyEmergencySetAside;
+			
 	}
 	
 	//TODO: Separate into multiple methods to improve readability
@@ -205,7 +212,7 @@ public class Ops {
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
 		try {
-			File monthlyBudgetFile = new File("C:\\Users\\joeyc\\Desktop\\monthly_budget_results.txt");
+			File monthlyBudgetFile = new File("RESULT FILE");
 			System.out.println("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
 			String textForFile = MessageFormat.format("{0}" +
@@ -224,7 +231,7 @@ public class Ops {
 			System.out.println("### Results were written to monthly_budget_results file and the file has closed.");
 		}
 		catch(IOException e) {
-			System.out.println("An error occurred creating and writing to file due to an IOException.");
+			System.out.println("--- An error occurred creating and writing to file due to an IOException.");
 		    e.printStackTrace();
 		}
 	}
@@ -260,7 +267,7 @@ public class Ops {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("An exception occurred check the WriteTransactionToTxtFile method.");
+			System.out.println("--- An exception occurred check the WriteTransactionToTxtFile method.");
 		} finally {
 			if(bufferedWriter != null) {
 				bufferedWriter.flush();
@@ -271,6 +278,7 @@ public class Ops {
 		
 	}
 	
+	//Driving method of opsclass
 	public static void OpsMainDriver() {
 		ParseTxt();
 		PrintContents(transactionHashTbl);

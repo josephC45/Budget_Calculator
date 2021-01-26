@@ -37,7 +37,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 public class Gui extends JFrame {
-	private static final long serialVersionUID = 572773041325318728L;
+	private static final long serialVersionUID = 0;
 	
 	private static JTextField transactionField = new JTextField(15);
 	private static JTextField fileTxtField = new JTextField(25);

@@ -11,7 +11,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-//Operations class
 public class Ops {
 		
 	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<Character,ArrayList<Ledger>>();
@@ -104,18 +103,13 @@ public class Ops {
 	 * Method should parse the txt file and call appropriate methods to add ledger objects to their 
 	 * respective arraylists and adding them all to the hashtable. *Needs work
 	 */
-	private static Hashtable<Character,ArrayList<Ledger>> ParseCSV() {
+	private static Hashtable<Character,ArrayList<Ledger>> ParseTxt() {
 		char transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
-
-		    // CSV file delimiter
 		    String DELIMITER = ",";
-
-		    // read the file line by line
 		    String line;
 		    while ((line = br.readLine()) != null) {
 
-		        // convert line into columns
 		        String[] esipTransaction = line.split(DELIMITER);
 		        
 		        transactionChoice = esipTransaction[0].charAt(0);
@@ -123,9 +117,7 @@ public class Ops {
 		        float transactionAmount = Float.parseFloat(esipTransaction[2]);
 		        String transactionDate = esipTransaction[3];
 		        
-
 		        Ledger ledger_transaction = new Ledger(transactionChoice,transactionTitle,transactionAmount,transactionDate);
-		        
 		        AddToAppropriateArrayList(ledger_transaction);
 		        AddTransactionsToHashTbl(transactionChoice);
 		    }
@@ -134,11 +126,11 @@ public class Ops {
 		    ex.printStackTrace();
 		    System.out.println("Error occurred in parsecsv method due to an IOException.");
 		}
+		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
 		return null;
 	}
 	
-	//Prints content of hashtable to console
 	private static void PrintContents(Hashtable<Character,ArrayList<Ledger>> transactionHashTbl) {
 		int index = 0;
 		int hashTblSize = transactionHashTbl.values().size();
@@ -157,18 +149,15 @@ public class Ops {
 		}
 	}
 	
-	//Asks user for input on their monthly income then breaks down input into a 50/40/5/5 split for budegetting reasons.
+	//Establishes monthly income then breaks down input into a 50/40/5/5 split for budegetting reasons.
 	private static void MonthlyBudgetRatio() {
-		
 		float monthlyIncome = (float) 5000.00;
-		
 		monthlyExpenseGoal = (float) (monthlyIncome * 0.50);
 		monthlySavingsGoal = (float) (monthlyIncome * 0.40);
 		monthlyInvestmentGoal = (float) (monthlyIncome * 0.05);
 		monthlyEmergencyGoal = (float) (monthlyIncome * 0.05);
 		
 		totalMonthlyTransactionGoal = new float[]{monthlyExpenseGoal,monthlySavingsGoal,monthlyInvestmentGoal,monthlyEmergencyGoal};
-
 		
 		budgetGoalString = "With a 50/40/5/5 split of Expenses, Savings, Investing and Emergencies your budget "
 							+ "looks like: " + "\n"
@@ -179,46 +168,39 @@ public class Ops {
 		
 	}
 	
-	//Gets total expenses for the month.
 	private static float TotalMonthlyExpenses(ArrayList<Ledger> expenses) {
 		float monthlyExpenses = 0;
 		for(Ledger transaction : expenses) {
 			monthlyExpenses += transaction.GetTransactionAmount();
 		}
 		return monthlyExpenses;
-		
 	}
 	
-	//Gets total savings for the month.
 	private static float TotalMonthlySavings(ArrayList<Ledger> savings) {
 		float monthlySavings = 0;
 		for(Ledger transaction : savings) {
 			monthlySavings += transaction.GetTransactionAmount();
 		}
 		return monthlySavings;
-		
 	}
 	
-	//Gets total investment amount for the month.
 	private static float TotalMonthlyInvestments(ArrayList<Ledger> investments) {
 		float monthlyInvestments = 0;
 		for(Ledger transaction : investments) {
 			monthlyInvestments += transaction.GetTransactionAmount();
 		}
 		return monthlyInvestments;
-		
 	}
 	
-	//Gets total money set aside for emergencies for the month.
 	private static float TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
 		float monthlyEmergencySetAside = 0;
 		for(Ledger transaction : emergencies) {
 			monthlyEmergencySetAside += transaction.GetTransactionAmount();
 		}
 		return monthlyEmergencySetAside;
-			
 	}
 	
+	//TODO: Separate into multiple methods to improve readability
 	//Write results to txt file for future reference.
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
@@ -247,8 +229,9 @@ public class Ops {
 		}
 	}
 	
+	//TODO: Separate into another method to improve readability
 	//Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
-	private static void RemainingMoneyAfterESI() {
+	private static void RemainingMoneyAfterESIP() {
 		float monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		float monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
 		float monthlyInvestmentTotal = TotalMonthlyInvestments(investmentTransactionArrayList);
@@ -265,7 +248,7 @@ public class Ops {
 		remainingExpenseAmount,remainingSavingsAmount,remainingInvestmentAmount,remainingEmergencyAmount);
 	}
 	
-	//Method used by the GUI
+	//Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -286,14 +269,12 @@ public class Ops {
 			
 		}
 		
-	}//end method
+	}
 	
-	
-	//Driving method of opsclass
 	public static void OpsMainDriver() {
-		ParseCSV();
+		ParseTxt();
 		PrintContents(transactionHashTbl);
 		MonthlyBudgetRatio();
-		RemainingMoneyAfterESI();
+		RemainingMoneyAfterESIP();
 	}
 }

@@ -49,9 +49,7 @@ public class Ops {
 				transactionHashTbl.put(transactionChoice, emergencyTransactionArrayList);
 				break;
 		}
-		
 		return transactionHashTbl;
-		
 	}
 	
 	//Adds ESIP transactions to their respective arraylists
@@ -103,7 +101,7 @@ public class Ops {
 	 * Method should parse the txt file and call appropriate methods to add ledger objects to their 
 	 * respective arraylists and adding them all to the hashtable. *Needs work
 	 */
-	private static Hashtable<Character,ArrayList<Ledger>> ParseTxt() {
+	private static void ParseTxt() {
 		char transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
 		    String DELIMITER = ",";
@@ -126,11 +124,11 @@ public class Ops {
 		    ex.printStackTrace();
 		    System.out.println("--- IOException occurred in ParseTxt method.");
 		}
+		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
-		return null;
 	}
 	
-	private static void PrintContents(Hashtable<Character,ArrayList<Ledger>> transactionHashTbl) {
+	private static void PrintContentsToConsole(Hashtable<Character,ArrayList<Ledger>> transactionHashTbl) {
 		int index = 0;
 		int hashTblSize = transactionHashTbl.values().size();
 		while(index < hashTblSize) {
@@ -281,7 +279,7 @@ public class Ops {
 	//Driving method of opsclass
 	public static void OpsMainDriver() {
 		ParseTxt();
-		PrintContents(transactionHashTbl);
+		PrintContentsToConsole(transactionHashTbl);
 		MonthlyBudgetRatio();
 		RemainingMoneyAfterESIP();
 	}

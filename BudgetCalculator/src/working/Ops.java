@@ -14,7 +14,6 @@ import java.util.Hashtable;
 public class Ops {
 		
 	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<Character,ArrayList<Ledger>>();
-	
 	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<Ledger>();
 	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<Ledger>();
 	private static ArrayList<Ledger> investmentTransactionArrayList = new ArrayList<Ledger>();
@@ -34,7 +33,7 @@ public class Ops {
 	
 	
 	//Adds ESIP transactions to the hashtable
-	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionsToHashTbl(char transactionChoice){
+	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashTbl(char transactionChoice){
 		switch(transactionChoice) {
 			case 'E':
 				transactionHashTbl.put(transactionChoice,expenseTransactionArrayList);
@@ -52,10 +51,8 @@ public class Ops {
 		return transactionHashTbl;
 	}
 	
-	//Adds ESIP transactions to their respective arraylists
 	private static void AddToAppropriateArrayList(Ledger ledger) {
 		char transactionChoice = ledger.GetTransactionChoice();
-		
 		switch(transactionChoice) {
 			case 'E':
 				expenseTransactionArrayList.add(ledger);
@@ -82,6 +79,7 @@ public class Ops {
 				tmpDate = transaction.GetTransactionDate();
 				dailyExpense = transaction.GetTransactionAmount();
 			}
+			//If we move onto the next date
 			else if(!tmpDate.equals(transaction.GetTransactionDate())){
 				tmpDate = transaction.GetTransactionDate();
 				dailyExpense = 0;
@@ -97,10 +95,7 @@ public class Ops {
 		}
 	}
 	
-	/*
-	 * Method should parse the txt file and call appropriate methods to add ledger objects to their 
-	 * respective arraylists and adding them all to the hashtable. *Needs work
-	 */
+	// Parse the txt file and call appropriate methods to add ledger objects to their respective arraylists and adding them all to the hashtable.
 	private static void ParseTxt() {
 		char transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
@@ -115,9 +110,9 @@ public class Ops {
 		        float transactionAmount = Float.parseFloat(esipTransaction[2]);
 		        String transactionDate = esipTransaction[3];
 		        
-		        Ledger ledger_transaction = new Ledger(transactionChoice,transactionTitle,transactionAmount,transactionDate);
-		        AddToAppropriateArrayList(ledger_transaction);
-		        AddTransactionsToHashTbl(transactionChoice);
+		        Ledger ledgerTransaction = new Ledger(transactionChoice,transactionTitle,transactionAmount,transactionDate);
+		        AddToAppropriateArrayList(ledgerTransaction);
+		        AddTransactionArrayListsToHashTbl(transactionChoice);
 		    }
 		    
 		} catch (IOException ex) {
@@ -165,7 +160,6 @@ public class Ops {
 		
 	}
 	
-	//Gets total expenses for the month.
 	private static float TotalMonthlyExpenses(ArrayList<Ledger> expenses) {
 		float monthlyExpenses = 0;
 		for(Ledger transaction : expenses) {
@@ -175,7 +169,6 @@ public class Ops {
 		
 	}
 	
-	//Gets total savings for the month.
 	private static float TotalMonthlySavings(ArrayList<Ledger> savings) {
 		float monthlySavings = 0;
 		for(Ledger transaction : savings) {
@@ -185,7 +178,6 @@ public class Ops {
 		
 	}
 	
-	//Gets total investment amount for the month.
 	private static float TotalMonthlyInvestments(ArrayList<Ledger> investments) {
 		float monthlyInvestments = 0;
 		for(Ledger transaction : investments) {
@@ -195,7 +187,6 @@ public class Ops {
 		
 	}
 	
-	//Gets total money set aside for emergencies for the month.
 	private static float TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
 		float monthlyEmergencySetAside = 0;
 		for(Ledger transaction : emergencies) {
@@ -205,12 +196,10 @@ public class Ops {
 			
 	}
 	
-	//TODO: Separate into multiple methods to improve readability
-	//Write results to txt file for future reference.
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
 		try {
-			File monthlyBudgetFile = new File("RESULT FILE");
+			File monthlyBudgetFile = new File("C:\\Users\\joeyc\\Desktop\\monthly_budget_results.txt");
 			System.out.println("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
 			String textForFile = MessageFormat.format("{0}" +
@@ -220,9 +209,8 @@ public class Ops {
 						"Savings: ${6}" + "\n" + 
 						"Invest: ${7}" + "\n" +
 						"Emergency: ${8}" + "\n",
-						budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal,
-						monthlyEmergencyTotal, remainingExpenseAmount, remainingSavingsAmount,
-						remainingInvestmentAmount, remainingEmergencyAmount);
+						budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
+						remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
 			monthlyBudgetFileWriter.write(textForFile);
 			monthlyBudgetFileWriter.close();
 			
@@ -234,7 +222,6 @@ public class Ops {
 		}
 	}
 	
-	//TODO: Separate into another method to improve readability
 	//Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
 	private static void RemainingMoneyAfterESIP() {
 		float monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);

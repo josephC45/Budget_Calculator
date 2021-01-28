@@ -50,11 +50,10 @@ public class Gui extends JFrame {
 		
 	}
 		
-	//Creates the menu bar
 	private static void CreateMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem manualItem = new JMenuItem("Manual");
-		File manualFile = new File("MANUAL I STILL HAVE TO ADD");
+		File manualFile = new File("MANUAL THAT I NEED TO INCLUDE IN PROJECT");
 		Desktop desktop = Desktop.getDesktop();
 		
 		manualItem.addActionListener((event) -> {
@@ -74,7 +73,6 @@ public class Gui extends JFrame {
 		
 	}
 	
-	//Creates the UI elements for the beginning of the frame.
 	private static void CreateHeaderUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Description");
 		JPanel introPanel = new JPanel();
@@ -108,7 +106,6 @@ public class Gui extends JFrame {
 		});
 	}
 	
-	//Adds body text fields to read and write to csv.
 	private static void AddLeftBodyUIFields(JPanel bodyPanel) {
 		JLabel inputTransactionLabel = new JLabel("Transaction:", JLabel.LEFT);
 		JLabel fileFieldLabel = new JLabel("File:", JLabel.LEFT);
@@ -137,8 +134,7 @@ public class Gui extends JFrame {
 				
 	}
 	
-	//Creates the dataset used for the 3D bar chart
-	private static CategoryDataset CreateBarChartDataset() {
+	private static CategoryDataset Create3DBarChartDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(Ops.totalMonthlyTransactionGoal[0], "Expense", "Expected Expense");
         dataset.addValue(Ops.totalMonthlyExpenses[0], "Expense", "Actual Expense");
@@ -155,11 +151,10 @@ public class Gui extends JFrame {
         return dataset;
     }
 	
-	//Adds the bar chart to the panel and frame
 	private static Component AddBarChartToFrame(JFrame frame) {
 		JFreeChart barChart = ChartFactory.createBarChart3D(
 				"Monthly Budget", "Transaction Type", "Dollar Amount", 
-				CreateBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
+				Create3DBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
 		frame.setMinimumSize(new java.awt.Dimension(600,400));
@@ -168,8 +163,7 @@ public class Gui extends JFrame {
 		return chartPanel;
 	}
 	
-	//Creates the dataset that will be used in the linechart
-	private static CategoryDataset CreateLineChartDataset() {
+	private static CategoryDataset Create3DLineChartDataset() {
 		String series = "Expense trend over the month";
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
@@ -193,7 +187,8 @@ public class Gui extends JFrame {
 	
 	private static Component AddLineChartToFrame(JFrame frame) {
 		JFreeChart lineChart = ChartFactory.createLineChart3D(
-				"Monthly Expense Trend", "Date", "Dollar Amount", CreateLineChartDataset(), PlotOrientation.VERTICAL, true, true, false);
+				"Monthly Expense Trend", "Date", "Dollar Amount", Create3DLineChartDataset(),
+				PlotOrientation.VERTICAL, true, true, false);
 		ChartPanel chartPanel = new ChartPanel(lineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
 		frame.setMinimumSize(new java.awt.Dimension(600,400));
@@ -271,7 +266,7 @@ public class Gui extends JFrame {
 		});
 	}
 	
-	//Creates the window and calls UI methods to put everything together.
+	//Creates the window and calls UI methods to put Header, Body and Footer UI together.
 	private static void CreateWindowAndUI() {
 		JFrame frame = new JFrame("Ledger Application");
 		SetWindowIcon(frame);

@@ -199,26 +199,28 @@ public class Ops {
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
 		try {
-			File monthlyBudgetFile = new File("C:\\Users\\joeyc\\Desktop\\monthly_budget_results.txt");
+			String homeFolder = System.getProperty("user.home");
+			File monthlyBudgetFile = new File(homeFolder, "monthly_budget_results.txt");
 			System.out.println("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
 			String textForFile = MessageFormat.format("{0}" +
-					 	"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
-						"After calculating the monthly expenses, savings, and investments based on a 50/40/5/5 breakdown, " + "\n" + 
-						"Expense: ${5}" + "\n" + 
-						"Savings: ${6}" + "\n" + 
-						"Invest: ${7}" + "\n" +
-						"Emergency: ${8}" + "\n",
-						budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
-						remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+					"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
+					"After calculating the monthly expenses, savings, and investments based on a 50/40/5/5 breakdown, " + "\n" + 
+					"Expense: ${5}" + "\n" + 
+					"Savings: ${6}" + "\n" + 
+					"Invest: ${7}" + "\n" +
+					"Emergency: ${8}" + "\n",
+					budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
+					remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
 			monthlyBudgetFileWriter.write(textForFile);
 			monthlyBudgetFileWriter.close();
-			
-			System.out.println("### Results were written to monthly_budget_results file and the file has closed.");
+
+			System.out.println("### Results were written to monthly_budget_results.txt file within the users 'home' directory"
+					+ " and the file has closed.");
 		}
 		catch(IOException e) {
 			System.out.println("--- An error occurred creating and writing to file due to an IOException.");
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	

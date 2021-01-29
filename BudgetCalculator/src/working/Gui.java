@@ -53,7 +53,7 @@ public class Gui extends JFrame {
 	private static void CreateMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem manualItem = new JMenuItem("Manual");
-		File manualFile = new File("MANUAL THAT I NEED TO INCLUDE IN PROJECT");
+		File manualFile = new File(".\\budgetCalculatorManual.txt");
 		Desktop desktop = Desktop.getDesktop();
 		
 		manualItem.addActionListener((event) -> {

@@ -1,0 +1,31 @@
+This is the manual for the Ledger/Budget calculator.
+
+To start::
+	E: Expense, what you are spending each month on necessary items. (Rent, insurance, food, etc)
+	S: Savings, the amount of money you plan to put into your savings account each month.
+	I: Investment, the amount of money you invest each month.
+	P: Particular Situations (Emergencies), the amount of money you set aside in case of emergencies.
+
+	Within the java code itself you can set your monthly income.
+	After setting your monthly income the ratio is divided into a 50/40/5/5 split
+	associating with ESIP.
+
+Beginning::
+	When starting the application the syntax is as follows,
+
+	E,Rent,450.00
+
+	To save this transaction, you will click the WRITE button at the bottom of the window.
+
+	After clicking the WRITE button, the input will be written to the file below, in the FILE text field.
+
+Ending::
+	After you have successfully input all transactions for the month, you would click the CALCULATE button
+	to receive a report breaking down the allocation of your money for the month from the file you specified.
+	Furthermore, a 3D bar chart, and line chart will be displayed in the right side of the window.
+	
+	The bar chart displays your expected spending (the ratio) vs. your actual spending.
+	The line chart shows your 'Expense' spending over the time period of recording.
+
+	
+

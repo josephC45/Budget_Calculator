@@ -75,13 +75,13 @@ public class Gui extends JFrame {
 	
 	private static void CreateHeaderUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Description");
-		JPanel introPanel = new JPanel();
+		JPanel headerPanel = new JPanel();
 		LayoutManager layout = new GridLayout(2,0,10,10);
 		
-		introPanel.setLayout(layout);
-		introPanel.add(new JLabel("This is my ledger/budgetting program that I will use to help allocate my income."));
-		introPanel.setBorder(border);
-		frame.getContentPane().add(introPanel, BorderLayout.BEFORE_FIRST_LINE);
+		headerPanel.setLayout(layout);
+		headerPanel.add(new JLabel("This is my ledger/budgetting program that I will use to help allocate my income."));
+		headerPanel.setBorder(border);
+		frame.getContentPane().add(headerPanel, BorderLayout.BEFORE_FIRST_LINE);
 	}
 	
 	private static void AddChooseFileButtonFunctionality(JButton chooseFileButton, JTextField fileField) {

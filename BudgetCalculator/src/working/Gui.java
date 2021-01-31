@@ -32,6 +32,7 @@ import javax.swing.border.Border;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
@@ -43,19 +44,62 @@ public class Gui extends JFrame {
 	private static JTextField fileTxtField = new JTextField(25);
 	protected static String filePath = null;
 	
+	private static JFreeChart barGraphForPNG = null;
+	private static JFreeChart lineChartForPNG = null;
+	
 	//Sets the icon of the application in the top left of the window
 	private static void SetWindowIcon(JFrame frame) {
 		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
 		frame.setIconImage(icon);
 		
 	}
+	
+	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
+		JMenuItem saveBarGraphItem = new JMenuItem("Save Bar Graph");
+		saveBarGraphItem.addActionListener((event) -> {
+			String homeFolder = System.getProperty("user.home");
+			File barGraphPNG = new File(homeFolder,"monthly_budget_bar_graph.png");
+			int width = 600;
+			int height = 400;
+			
+			try {
+				ChartUtilities.saveChartAsPNG(barGraphPNG, barGraphForPNG, width, height);
+				System.out.println("### Bar Graph PNG was saved to your home folder.");
+			} catch(IOException e){
+				e.printStackTrace();
+				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
+			}
+		});
 		
-	private static void CreateMenuBar(JFrame frame) {
-		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(fileMenu);
+		fileMenu.add(saveBarGraphItem);
+	}
+	
+	private static void CreateLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
+		JMenuItem saveLineChartItem = new JMenuItem("Save Line Graph");
+		saveLineChartItem.addActionListener((event) -> {
+			String homeFolder = System.getProperty("user.home");
+			File lineChartPNG = new File(homeFolder,"monthly_expense_line_chart.png");
+			int width = 600;
+			int height = 400;
+			
+			try {
+				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, width, height);
+				System.out.println("### Line Chart PNG was saved to your home folder.");
+			} catch(IOException e){
+				e.printStackTrace();
+				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
+			}
+		});
+		
+		menuBar.add(fileMenu);
+		fileMenu.add(saveLineChartItem);
+	}
+	
+	private static void CreateAboutMenuItemAndEvent(JMenuBar menuBar, JMenu aboutMenu) {
 		JMenuItem manualItem = new JMenuItem("Manual");
 		File manualFile = new File(".\\budgetCalculatorManual.txt");
 		Desktop desktop = Desktop.getDesktop();
-		
 		manualItem.addActionListener((event) -> {
 			try {
 				desktop.open(manualFile);
@@ -66,9 +110,20 @@ public class Gui extends JFrame {
 			}
 		});
 		
-		JMenu aboutMenu = new JMenu("About");
 		menuBar.add(aboutMenu);
 		aboutMenu.add(manualItem);
+	}
+		
+	private static void CreateMenuBar(JFrame frame) {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+	
+		CreateBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
+		CreateLineChartFileMenuItemAndEvent(menuBar, fileMenu);
+		
+		JMenu aboutMenu = new JMenu("About");
+		CreateAboutMenuItemAndEvent(menuBar, aboutMenu);
+		
 		frame.setJMenuBar(menuBar);
 		
 	}
@@ -147,7 +202,7 @@ public class Gui extends JFrame {
 
         dataset.addValue(Ops.totalMonthlyTransactionGoal[3], "Emergency", "Expected Expense");
         dataset.addValue(Ops.totalMonthlyExpenses[3], "Emergency", "Actual Expense");
-
+        
         return dataset;
     }
 	
@@ -155,6 +210,7 @@ public class Gui extends JFrame {
 		JFreeChart barChart = ChartFactory.createBarChart3D(
 				"Monthly Budget", "Transaction Type", "Dollar Amount", 
 				Create3DBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
+		barGraphForPNG = barChart;
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
 		frame.setMinimumSize(new java.awt.Dimension(600,400));
@@ -189,6 +245,7 @@ public class Gui extends JFrame {
 		JFreeChart lineChart = ChartFactory.createLineChart3D(
 				"Monthly Expense Trend", "Date", "Dollar Amount", Create3DLineChartDataset(),
 				PlotOrientation.VERTICAL, true, true, false);
+		lineChartForPNG = lineChart;
 		ChartPanel chartPanel = new ChartPanel(lineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
 		frame.setMinimumSize(new java.awt.Dimension(600,400));

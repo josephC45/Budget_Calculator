@@ -54,7 +54,6 @@ public class Gui extends JFrame {
 	private static void SetWindowIcon(JFrame frame) {
 		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
 		frame.setIconImage(icon);
-		
 	}
 	
 	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
@@ -111,8 +110,8 @@ public class Gui extends JFrame {
 		
 	private static void CreateMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
+		
 		JMenu fileMenu = new JMenu("File");
-	
 		CreateBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
 		CreateLineChartFileMenuItemAndEvent(menuBar, fileMenu);
 		

@@ -32,7 +32,6 @@ public class Ops {
 	protected static Hashtable<Integer, String> expenseHashTblForLineChart = new Hashtable<Integer,String>();
 	
 	
-	//Adds ESIP transactions to the hashtable
 	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashTbl(char transactionChoice){
 		switch(transactionChoice) {
 			case 'E':
@@ -52,7 +51,7 @@ public class Ops {
 	}
 	
 	private static void AddToAppropriateArrayList(Ledger ledger) {
-		char transactionChoice = ledger.GetTransactionChoice();
+		Character transactionChoice = ledger.GetTransactionChoice();
 		switch(transactionChoice) {
 			case 'E':
 				expenseTransactionArrayList.add(ledger);
@@ -95,9 +94,9 @@ public class Ops {
 		}
 	}
 	
-	// Parse the txt file and call appropriate methods to add ledger objects to their respective arraylists and adding them all to the hashtable.
+	//Parses txt file, adds to appropriate arraylist, then adds to hashtable
 	private static void ParseTxt() {
-		char transactionChoice = '\0';
+		Character transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
 		    String DELIMITER = ",";
 		    String line;
@@ -121,24 +120,6 @@ public class Ops {
 		}
 		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
-	}
-	
-	private static void PrintContentsToConsole(Hashtable<Character,ArrayList<Ledger>> transactionHashTbl) {
-		int index = 0;
-		int hashTblSize = transactionHashTbl.values().size();
-		while(index < hashTblSize) {
-			for(ArrayList<Ledger> ledger : transactionHashTbl.values()) {
-				int ledgerArrayListSize = ledger.size();
-				if(index < ledgerArrayListSize) {
-					System.out.println("Choice: " + ledger.get(index).GetTransactionChoice() + "\n"
-							+ "Title: " + ledger.get(index).GetTransactionTitle() + "\n"
-							+ "Amount: " + ledger.get(index).GetTransactionAmount() + "\n"
-							+ "Date: " + ledger.get(index).GetTransactionDate());
-					System.out.println();
-				}
-			}
-			index++;
-		}
 	}
 	
 	//Establishes monthly income then breaks down input into a 50/40/5/5 split for budegetting reasons.
@@ -166,7 +147,6 @@ public class Ops {
 			monthlyExpenses += transaction.GetTransactionAmount();
 		}
 		return monthlyExpenses;
-		
 	}
 	
 	private static float TotalMonthlySavings(ArrayList<Ledger> savings) {
@@ -175,7 +155,6 @@ public class Ops {
 			monthlySavings += transaction.GetTransactionAmount();
 		}
 		return monthlySavings;
-		
 	}
 	
 	private static float TotalMonthlyInvestments(ArrayList<Ledger> investments) {
@@ -184,7 +163,6 @@ public class Ops {
 			monthlyInvestments += transaction.GetTransactionAmount();
 		}
 		return monthlyInvestments;
-		
 	}
 	
 	private static float TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
@@ -193,9 +171,9 @@ public class Ops {
 			monthlyEmergencySetAside += transaction.GetTransactionAmount();
 		}
 		return monthlyEmergencySetAside;
-			
 	}
 	
+	//Write results to txt file for future reference.
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
 		try {
@@ -204,27 +182,26 @@ public class Ops {
 			System.out.println("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
 			String textForFile = MessageFormat.format("{0}" +
-					"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
-					"After calculating the monthly expenses, savings, and investments based on a 50/40/5/5 breakdown, " + "\n" + 
-					"Expense: ${5}" + "\n" + 
-					"Savings: ${6}" + "\n" + 
-					"Invest: ${7}" + "\n" +
-					"Emergency: ${8}" + "\n",
-					budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
-					remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+					 	"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
+						"After calculating the monthly expenses, savings, and investments based on a 50/40/5/5 breakdown, " + "\n" + 
+						"Expense: ${5}" + "\n" + 
+						"Savings: ${6}" + "\n" + 
+						"Invest: ${7}" + "\n" +
+						"Emergency: ${8}" + "\n",
+						budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
+						remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
 			monthlyBudgetFileWriter.write(textForFile);
 			monthlyBudgetFileWriter.close();
-
+			
 			System.out.println("### Results were written to monthly_budget_results.txt file within the users 'home' directory"
 					+ " and the file has closed.");
 		}
 		catch(IOException e) {
 			System.out.println("--- An error occurred creating and writing to file due to an IOException.");
-			e.printStackTrace();
+		    e.printStackTrace();
 		}
 	}
 	
-	//Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
 	private static void RemainingMoneyAfterESIP() {
 		float monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		float monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
@@ -245,11 +222,16 @@ public class Ops {
 	//Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
+		Character transactionChoice = transaction.charAt(0);
+		Character transactionChoiceToUpperCase = Character.toUpperCase(transactionChoice);
+		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
+		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		try {
-			
-			bufferedWriter.write(transaction);
+			System.out.println("### Writing [" + finalTransaction.toString() + "] to txt file...");
+			bufferedWriter.write(finalTransaction);
 			bufferedWriter.newLine();
+			System.out.println("### Transactions was successfully written to txt file.");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -268,7 +250,6 @@ public class Ops {
 	//Driving method of opsclass
 	public static void OpsMainDriver() {
 		ParseTxt();
-		PrintContentsToConsole(transactionHashTbl);
 		MonthlyBudgetRatio();
 		RemainingMoneyAfterESIP();
 	}

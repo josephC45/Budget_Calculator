@@ -144,6 +144,7 @@ public class Gui extends JFrame {
 						filePath = file.getAbsolutePath();
 						fileTxtField.setText(file.getName());
 						fileTxtField.setEditable(false);
+						//chooseFileButton.setVisible(false);
 					}
 				}
 				catch (Exception ex) {
@@ -260,7 +261,6 @@ public class Gui extends JFrame {
 	private static void FooterWriteButtonFunctionality(JButton write) {
 		write.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Writing input to file...");
 				String transaction = transactionField.getText();
 				try {
 					Ops.WriteTransactionToTxtFile(transaction);
@@ -277,7 +277,7 @@ public class Gui extends JFrame {
 	private static void FooterCalculateButtonFunctionality(JButton calculate, JFrame frame) {
 		calculate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Calculating budget...");
+				System.out.println("### Calculating budget...");
 				Ops.OpsMainDriver();
 				CreateRightBodyUI(frame);
 			}

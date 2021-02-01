@@ -46,6 +46,9 @@ public class Gui extends JFrame {
 	
 	private static JFreeChart barGraphForPNG = null;
 	private static JFreeChart lineChartForPNG = null;
+	private static int pngWidth = 600;
+	private static int pngHeight = 400;
+	private static String homeFolder = System.getProperty("user.home");
 	
 	//Sets the icon of the application in the top left of the window
 	private static void SetWindowIcon(JFrame frame) {
@@ -57,13 +60,9 @@ public class Gui extends JFrame {
 	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveBarGraphItem = new JMenuItem("Save Bar Graph");
 		saveBarGraphItem.addActionListener((event) -> {
-			String homeFolder = System.getProperty("user.home");
 			File barGraphPNG = new File(homeFolder,"monthly_budget_bar_graph.png");
-			int width = 600;
-			int height = 400;
-			
 			try {
-				ChartUtilities.saveChartAsPNG(barGraphPNG, barGraphForPNG, width, height);
+				ChartUtilities.saveChartAsPNG(barGraphPNG, barGraphForPNG, pngWidth, pngHeight);
 				System.out.println("### Bar Graph PNG was saved to your home folder.");
 			} catch(IOException e){
 				e.printStackTrace();
@@ -78,13 +77,9 @@ public class Gui extends JFrame {
 	private static void CreateLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveLineChartItem = new JMenuItem("Save Line Graph");
 		saveLineChartItem.addActionListener((event) -> {
-			String homeFolder = System.getProperty("user.home");
 			File lineChartPNG = new File(homeFolder,"monthly_expense_line_chart.png");
-			int width = 600;
-			int height = 400;
-			
 			try {
-				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, width, height);
+				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, pngWidth, pngHeight);
 				System.out.println("### Line Chart PNG was saved to your home folder.");
 			} catch(IOException e){
 				e.printStackTrace();

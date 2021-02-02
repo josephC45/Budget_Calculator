@@ -66,6 +66,9 @@ public class Gui extends JFrame {
 			} catch(IOException e){
 				e.printStackTrace();
 				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
+			} catch(IllegalArgumentException iae) {
+				System.out.println("--- IllegalArgumentException occurred in the CreateFileMenuItemAndEvent. \n"
+						+ "make sure to first calculate your budget before attempting to save the bar graph as a png.");
 			}
 		});
 		
@@ -82,7 +85,10 @@ public class Gui extends JFrame {
 				System.out.println("### Line Chart PNG was saved to your home folder.");
 			} catch(IOException e){
 				e.printStackTrace();
-				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
+				System.out.println("--- IOException occurred in the CreateLineChartFileMenuItemAndEvent method.");
+			} catch(IllegalArgumentException iae) {
+				System.out.println("--- IllegalArgumentException occurred in the CreateLineChartFileMenuItemAndEvent. \n"
+						+ "make sure to first calculate your budget before attempting to save the line chart as a png.");
 			}
 		});
 		
@@ -98,7 +104,6 @@ public class Gui extends JFrame {
 			try {
 				desktop.open(manualFile);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("--- IOException occurred in the CreateMenuBar method.");
 			}
@@ -264,10 +269,12 @@ public class Gui extends JFrame {
 				String transaction = transactionField.getText();
 				try {
 					Ops.WriteTransactionToTxtFile(transaction);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (IOException ioe) {
 					System.out.println("--- IOException occurred in the FooterWriteButtonFunctionality method.");
+					ioe.printStackTrace();
+				}catch (NullPointerException ne) { 
+					System.out.println("--- NullPointerException occurred in the FooterWriteButtonFunctionality method. \n"
+							+ "make sure to supply a valid string to be written to the file.");
 				}
 				transactionField.setText("");
 			}

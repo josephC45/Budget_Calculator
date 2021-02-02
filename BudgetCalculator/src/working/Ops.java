@@ -94,8 +94,8 @@ public class Ops {
 		}
 	}
 	
-	//Parses txt file, adds to appropriate arraylist, then adds to hashtable
-	private static void ParseTxt() {
+	//Parse txt -> add to appropriate arraylist -> add to hash table
+	private static void ParseTxt()  {
 		Character transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
 		    String DELIMITER = ",";
@@ -115,9 +115,15 @@ public class Ops {
 		    }
 		    
 		} catch (IOException ex) {
-		    ex.printStackTrace();
 		    System.out.println("--- IOException occurred in ParseTxt method.");
+		    ex.printStackTrace();
+		    System.exit(0);
+		} catch (NullPointerException ne) {
+			System.out.println("--- NullPointerException occurred in the ParseTxt method. \n "
+					+ "make sure you has chosen the correct file containing your ESIP info.");
+			System.exit(0);
 		}
+		
 		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
 	}
@@ -147,6 +153,7 @@ public class Ops {
 			monthlyExpenses += transaction.GetTransactionAmount();
 		}
 		return monthlyExpenses;
+		
 	}
 	
 	private static float TotalMonthlySavings(ArrayList<Ledger> savings) {
@@ -155,6 +162,7 @@ public class Ops {
 			monthlySavings += transaction.GetTransactionAmount();
 		}
 		return monthlySavings;
+		
 	}
 	
 	private static float TotalMonthlyInvestments(ArrayList<Ledger> investments) {
@@ -163,6 +171,7 @@ public class Ops {
 			monthlyInvestments += transaction.GetTransactionAmount();
 		}
 		return monthlyInvestments;
+		
 	}
 	
 	private static float TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
@@ -171,9 +180,9 @@ public class Ops {
 			monthlyEmergencySetAside += transaction.GetTransactionAmount();
 		}
 		return monthlyEmergencySetAside;
+			
 	}
 	
-	//Write results to txt file for future reference.
 	private static void WriteResultsToTxtFile(float monthlyExpenseTotal,float monthlySavingsTotal,float monthlyInvestmentTotal,float monthlyEmergencyTotal,
 	float remainingExpenseAmount,float remainingSavingsAmount,float remainingInvestmentAmount,float remainingEmergencyAmount) {
 		try {
@@ -202,6 +211,7 @@ public class Ops {
 		}
 	}
 	
+	//Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
 	private static void RemainingMoneyAfterESIP() {
 		float monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		float monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
@@ -233,11 +243,11 @@ public class Ops {
 			bufferedWriter.newLine();
 			System.out.println("### Transactions was successfully written to txt file.");
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("--- An exception occurred check the WriteTransactionToTxtFile method.");
-		} finally {
+		} catch (NullPointerException ne) { 
+			System.out.println("--- NullPointerException occurred in the WriteTransactionToTxtFile method.");
+			ne.printStackTrace();
+		}
+		finally {
 			if(bufferedWriter != null) {
 				bufferedWriter.flush();
 				bufferedWriter.close();

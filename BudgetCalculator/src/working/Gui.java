@@ -19,12 +19,14 @@ import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -56,6 +58,12 @@ public class Gui extends JFrame {
 		frame.setIconImage(icon);
 	}
 	
+	private static void DisplayErrorMessagePopUp(String message) {
+		JOptionPane.showMessageDialog(null, message, "Error!", JOptionPane.ERROR_MESSAGE);
+		JDialog dialog = new JDialog();
+		dialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+	
 	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveBarGraphItem = new JMenuItem("Save Bar Graph");
 		saveBarGraphItem.addActionListener((event) -> {
@@ -67,8 +75,8 @@ public class Gui extends JFrame {
 				e.printStackTrace();
 				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
 			} catch(IllegalArgumentException iae) {
-				System.out.println("--- IllegalArgumentException occurred in the CreateFileMenuItemAndEvent. \n"
-						+ "make sure to first calculate your budget before attempting to save the bar graph as a png.");
+				String iaeMessage = "Make sure to first calculate your budget before attempting to save the bar graph as a png.";
+				DisplayErrorMessagePopUp(iaeMessage);
 			}
 		});
 		
@@ -82,14 +90,15 @@ public class Gui extends JFrame {
 			File lineChartPNG = new File(homeFolder,"monthly_expense_line_chart.png");
 			try {
 				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, pngWidth, pngHeight);
-				System.out.println("### Line Chart PNG was saved to your home folder.");
 			} catch(IOException e){
 				e.printStackTrace();
-				System.out.println("--- IOException occurred in the CreateLineChartFileMenuItemAndEvent method.");
+				System.out.println("--- IOException occurred in the CreateMenuBar method.");
 			} catch(IllegalArgumentException iae) {
-				System.out.println("--- IllegalArgumentException occurred in the CreateLineChartFileMenuItemAndEvent. \n"
-						+ "make sure to first calculate your budget before attempting to save the line chart as a png.");
+				String iaeMessage = "Make sure to first calculate your budget before attempting to save the line chart as a png.";
+				DisplayErrorMessagePopUp(iaeMessage);
 			}
+			System.out.println("### Line Chart PNG was saved to your home folder.");
+			
 		});
 		
 		menuBar.add(fileMenu);
@@ -115,16 +124,15 @@ public class Gui extends JFrame {
 		
 	private static void CreateMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
-		
 		JMenu fileMenu = new JMenu("File");
+		JMenu aboutMenu = new JMenu("About");
+
 		CreateBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
 		CreateLineChartFileMenuItemAndEvent(menuBar, fileMenu);
-		
-		JMenu aboutMenu = new JMenu("About");
+			
 		CreateAboutMenuItemAndEvent(menuBar, aboutMenu);
-		
+			
 		frame.setJMenuBar(menuBar);
-		
 	}
 	
 	private static void CreateHeaderUI(JFrame frame) {
@@ -149,7 +157,6 @@ public class Gui extends JFrame {
 						filePath = file.getAbsolutePath();
 						fileTxtField.setText(file.getName());
 						fileTxtField.setEditable(false);
-						//chooseFileButton.setVisible(false);
 					}
 				}
 				catch (Exception ex) {
@@ -272,10 +279,14 @@ public class Gui extends JFrame {
 				} catch (IOException ioe) {
 					System.out.println("--- IOException occurred in the FooterWriteButtonFunctionality method.");
 					ioe.printStackTrace();
-				}catch (NullPointerException ne) { 
-					System.out.println("--- NullPointerException occurred in the FooterWriteButtonFunctionality method. \n"
-							+ "make sure to supply a valid string to be written to the file.");
+				} catch (StringIndexOutOfBoundsException siobe) {
+					String siobeMessage = "Make sure you supply valid input to the transaction field.";
+					DisplayErrorMessagePopUp(siobeMessage);
+				} catch (NullPointerException ne) { 
+					String neMessage = "Make sure to first supply a valid string and choose the correct txt file.";
+					DisplayErrorMessagePopUp(neMessage);
 				}
+				
 				transactionField.setText("");
 			}
 		});

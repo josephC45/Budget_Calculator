@@ -94,8 +94,8 @@ public class Ops {
 		}
 	}
 	
-	//Parse txt -> add to appropriate arraylist -> add to hash table
-	private static void ParseTxt()  {
+	//Parse txt file -> add to appropriate arraylist -> add to hash table
+	private static void ParseTxt() throws NullPointerException  {
 		Character transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
 		    String DELIMITER = ",";
@@ -118,13 +118,7 @@ public class Ops {
 		    System.out.println("--- IOException occurred in ParseTxt method.");
 		    ex.printStackTrace();
 		    System.exit(0);
-		} catch (NullPointerException ne) {
-			System.out.println("--- NullPointerException occurred in the ParseTxt method. \n "
-					+ "make sure you has chosen the correct file containing your ESIP info.");
-			System.exit(0);
 		}
-		
-		
 		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
 	}
 	
@@ -237,22 +231,14 @@ public class Ops {
 		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		try {
-			System.out.println("### Writing [" + finalTransaction.toString() + "] to txt file...");
-			bufferedWriter.write(finalTransaction);
-			bufferedWriter.newLine();
-			System.out.println("### Transactions was successfully written to txt file.");
+		System.out.println("### Writing [" + finalTransaction.toString() + "] to txt file...");
+		bufferedWriter.write(finalTransaction);
+		bufferedWriter.newLine();
+		System.out.println("### Transactions was successfully written to txt file.");
 			
-		} catch (NullPointerException ne) { 
-			System.out.println("--- NullPointerException occurred in the WriteTransactionToTxtFile method.");
-			ne.printStackTrace();
-		}
-		finally {
-			if(bufferedWriter != null) {
+		if(bufferedWriter != null) {
 				bufferedWriter.flush();
 				bufferedWriter.close();
-			}
-			
 		}
 		
 	}

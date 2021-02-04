@@ -286,7 +286,6 @@ public class Gui extends JFrame {
 					String neMessage = "Make sure to first supply a valid string and choose the correct txt file.";
 					DisplayErrorMessagePopUp(neMessage);
 				}
-				
 				transactionField.setText("");
 			}
 		});
@@ -296,8 +295,13 @@ public class Gui extends JFrame {
 		calculate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("### Calculating budget...");
-				Ops.OpsMainDriver();
-				CreateRightBodyUI(frame);
+				try {
+					Ops.OpsMainDriver();
+					CreateRightBodyUI(frame);
+				} catch (NullPointerException ne) {
+					String neMessage = "Make sure you have chosen the correct file containing your ESIP info.";
+					DisplayErrorMessagePopUp(neMessage);
+				}
 			}
 		});
 	}

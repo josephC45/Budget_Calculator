@@ -85,7 +85,7 @@ public class Gui extends JFrame {
 	}
 	
 	private static void CreateLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
-		JMenuItem saveLineChartItem = new JMenuItem("Save Line Graph");
+		JMenuItem saveLineChartItem = new JMenuItem("Save Line Chart");
 		saveLineChartItem.addActionListener((event) -> {
 			File lineChartPNG = new File(homeFolder,"monthly_expense_line_chart.png");
 			try {
@@ -128,6 +128,7 @@ public class Gui extends JFrame {
 		JMenu aboutMenu = new JMenu("About");
 
 		CreateBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
+		fileMenu.addSeparator();
 		CreateLineChartFileMenuItemAndEvent(menuBar, fileMenu);
 			
 		CreateAboutMenuItemAndEvent(menuBar, aboutMenu);

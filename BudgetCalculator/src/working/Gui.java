@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -184,7 +185,6 @@ public class Gui extends JFrame {
 		AddChooseFileButtonFunctionality(chooseFileButton,fileTxtField);
 	}
 	
-	//Creates the UI for the body (left side) of the frame.
 	private static void CreateLeftBodyUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Write/Calculate section");
 		JPanel leftBodyPanel = new JPanel();
@@ -241,7 +241,7 @@ public class Gui extends JFrame {
 			
 			int key = iteratorForSet.next();
 			String[] hashValue = expenseHashTableForLineChart.get(key).split(":");
-			float amount = Float.parseFloat(hashValue[0]);
+			BigDecimal amount = new BigDecimal(hashValue[0]);
 			String date = hashValue[1];
 			dataset.addValue(amount, series, date);
 		}
@@ -263,7 +263,6 @@ public class Gui extends JFrame {
 				
 	}
 	
-	//Creates the UI for the body (right side) of the frame
 	private static void CreateRightBodyUI(JFrame frame) {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
@@ -286,6 +285,9 @@ public class Gui extends JFrame {
 				} catch (NullPointerException ne) { 
 					String neMessage = "Make sure to first supply a valid string and choose the correct txt file.";
 					DisplayErrorMessagePopUp(neMessage);
+				} catch (NumberFormatException nfe) {
+					String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
+					DisplayErrorMessagePopUp(nfeMessage);
 				}
 				transactionField.setText("");
 			}
@@ -302,6 +304,9 @@ public class Gui extends JFrame {
 				} catch (NullPointerException ne) {
 					String neMessage = "Make sure you have chosen the correct file containing your ESIP info.";
 					DisplayErrorMessagePopUp(neMessage);
+				} catch (NumberFormatException nfe) {
+					String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
+					DisplayErrorMessagePopUp(nfeMessage);
 				}
 			}
 		});

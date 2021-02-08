@@ -19,12 +19,15 @@ The program takes a given monthly income (**which you have to set in the Ops cla
 
 View the code from the _MonthlyBudgetRatio()_ method below:
 
-    float monthlyIncome = (float) 5000.00;
-    monthlyExpenseGoal = (float) (monthlyIncome * 0.50);
-    monthlySavingsGoal = (float) (monthlyIncome * 0.40);
-    monthlyInvestmentGoal = (float) (monthlyIncome * 0.05);
-    monthlyEmergencyGoal = (float) (monthlyIncome * 0.05);
-
+   		BigDecimal monthlyIncome = new BigDecimal(5000.00);
+		BigDecimal ratioOfMonthlyIncomeForExpenses = new BigDecimal(0.50);
+		BigDecimal ratioOfMonthlyIncomeForSavings = new BigDecimal(0.40);
+		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = new BigDecimal(0.05);
+		
+		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses);
+		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings);
+		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
+		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
 
 ## The process:
 1. You create a txt file where you will create a entry with a transaction choice of:

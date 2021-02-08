@@ -1,5 +1,7 @@
 package working;
 
+import java.math.BigDecimal;
+
 /*
  * Ledger object class
  */
@@ -7,10 +9,10 @@ package working;
 public class Ledger {
 	char transaction_choice;
 	String transaction_title;
-	float transaction_amount;
+	BigDecimal transaction_amount;
 	String transaction_date;
 	
-	public Ledger(char transaction_choice, String transaction_title, float transaction_amount, String transaction_date) {
+	public Ledger(char transaction_choice, String transaction_title, BigDecimal transaction_amount, String transaction_date) {
 		this.transaction_choice = transaction_choice;
 		this.transaction_title = transaction_title;
 		this.transaction_amount = transaction_amount;
@@ -34,11 +36,11 @@ public class Ledger {
 		return this.transaction_title;
 	}
 	
-	public void SetTransactionAmount(float transaction_amount) {
+	public void SetTransactionAmount(BigDecimal transaction_amount) {
 		this.transaction_amount = transaction_amount;
 	}
 	
-	public float GetTransactionAmount() {
+	public BigDecimal GetTransactionAmount() {
 		return this.transaction_amount;
 	}
 	

@@ -253,5 +253,6 @@ public class Ops {
 		ParseTxt();
 		MonthlyBudgetRatio();
 		RemainingMoneyAfterESIP();
+		System.gc();
 	}
 }

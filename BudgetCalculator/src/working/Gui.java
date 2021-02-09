@@ -364,5 +364,6 @@ public class Gui extends JFrame {
 	//Driving method for the Gui class.
 	public static void CreateGui() {
 		CreateWindowAndUI();
+		System.gc();
 	}
 }

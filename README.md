@@ -38,14 +38,14 @@ View the code from the _MonthlyBudgetRatio()_ method below:
 
 2. In the transaction text box a user would insert a 'transaction' such as:
    
-    E,AmazonShopping,10.00,1/4/2020 \
+    E,AmazonShopping,10.00,1/4/2020
    
 
 3. Then specify the path to the txt file where you have written the transactions down using the _'Choose File'_ button.
 
 4. After you are satisfied with the amount of transactions you have input into your txt file, then you are ready to click the _'Calculate Budget'_ button.
    
-5. Once the button has been pressed, a report will be generated (in the users home folder) along with a bar graph and a line chart. \
+5. Once the button has been pressed, a report will be generated (in the users home folder) along with a bar graph and a line chart.
 
     * The Bar Graph
         * Displays two groupings of bars, one dedicated to your monthly spending goal, and the other would be your actual spending that you documented.

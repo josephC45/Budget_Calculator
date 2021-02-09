@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -14,11 +15,11 @@ import java.util.Hashtable;
 
 public class Ops {
 		
-	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<Character,ArrayList<Ledger>>();
-	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<Ledger>();
-	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<Ledger>();
-	private static ArrayList<Ledger> investmentTransactionArrayList = new ArrayList<Ledger>();
-	private static ArrayList<Ledger> emergencyTransactionArrayList = new ArrayList<Ledger>();
+	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<>();
+	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<>();
+	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<>();
+	private static ArrayList<Ledger> investmentTransactionArrayList = new ArrayList<>();
+	private static ArrayList<Ledger> emergencyTransactionArrayList = new ArrayList<>();
 	
 	private static BigDecimal monthlyExpenseGoal = new BigDecimal(0);
 	private static BigDecimal monthlySavingsGoal = new BigDecimal(0);
@@ -30,10 +31,10 @@ public class Ops {
 	protected static BigDecimal [] totalMonthlyTransactionGoal;
 	protected static BigDecimal [] totalMonthlyExpenses;
 	
-	protected static Hashtable<Integer, String> expenseHashTblForLineChart = new Hashtable<Integer,String>();
+	protected static Hashtable<Integer, String> expenseHashTblForLineChart = new Hashtable<>();
 	
 	
-	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashTbl(char transactionChoice){
+	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashTbl(char transactionChoice) throws Exception{
 		switch(transactionChoice) {
 			case 'E':
 				transactionHashTbl.put(transactionChoice,expenseTransactionArrayList);
@@ -47,11 +48,13 @@ public class Ops {
 			case 'P':
 				transactionHashTbl.put(transactionChoice, emergencyTransactionArrayList);
 				break;
+			default:
+				throw new Exception("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
 		}
 		return transactionHashTbl;
 	}
 	
-	private static void AddToAppropriateArrayList(Ledger ledger) {
+	private static void AddToAppropriateArrayList(Ledger ledger) throws Exception {
 		Character transactionChoice = ledger.GetTransactionChoice();
 		switch(transactionChoice) {
 			case 'E':
@@ -66,6 +69,9 @@ public class Ops {
 			case 'P':
 				emergencyTransactionArrayList.add(ledger);
 				break;
+			default:
+				throw new Exception("--- Error occurred in the AddToAppropriateArrayList method");
+
 		}
 	}
 	
@@ -115,8 +121,12 @@ public class Ops {
 		        AddTransactionArrayListsToHashTbl(transactionChoice);
 		    }
 		    
-		} catch (IOException ex) {
+		} catch (IOException ioe) {
 		    System.out.println("--- IOException occurred in ParseTxt method.");
+		    ioe.printStackTrace();
+		    System.exit(0);
+		} catch (Exception ex) {
+		    System.out.println("--- Exception occurred in ParseTxt method.");
 		    ex.printStackTrace();
 		    System.exit(0);
 		}
@@ -125,15 +135,15 @@ public class Ops {
 	
 	//Establishes monthly income then breaks down input into a 50/40/5/5 split for budegetting reasons.
 	private static void MonthlyBudgetRatio() {
-		BigDecimal monthlyIncome = new BigDecimal(5000.00);
-		BigDecimal ratioOfMonthlyIncomeForExpenses = new BigDecimal(0.50);
-		BigDecimal ratioOfMonthlyIncomeForSavings = new BigDecimal(0.40);
-		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = new BigDecimal(0.05);
+		BigDecimal monthlyIncome = BigDecimal.valueOf(5156.67);
+		BigDecimal ratioOfMonthlyIncomeForExpenses = BigDecimal.valueOf(0.50);
+		BigDecimal ratioOfMonthlyIncomeForSavings = BigDecimal.valueOf(0.40);
+		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = BigDecimal.valueOf(0.05);
 		
-		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses);
-		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings);
-		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
-		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
+		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses).setScale(2, RoundingMode.CEILING);
+		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings).setScale(2, RoundingMode.CEILING);
+		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
+		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
 		
 		totalMonthlyTransactionGoal = new BigDecimal[]{monthlyExpenseGoal,monthlySavingsGoal,monthlyInvestmentGoal,monthlyEmergencyGoal};
 		
@@ -236,16 +246,16 @@ public class Ops {
 		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		System.out.println("### Writing [" + finalTransaction.toString() + "] to txt file...");
-		bufferedWriter.write(finalTransaction);
-		bufferedWriter.newLine();
-		System.out.println("### Transactions was successfully written to txt file.");
-			
-		if(bufferedWriter != null) {
-				bufferedWriter.flush();
-				bufferedWriter.close();
+		try {
+			System.out.println("### Writing [" + finalTransaction + "] to txt file...");
+			bufferedWriter.write(finalTransaction);
+			bufferedWriter.newLine();
+			System.out.println("### Transactions was successfully written to txt file.");
 		}
-		
+		finally {
+			bufferedWriter.flush();
+			bufferedWriter.close();
+		}
 	}
 	
 	//Driving method of opsclass
@@ -253,6 +263,5 @@ public class Ops {
 		ParseTxt();
 		MonthlyBudgetRatio();
 		RemainingMoneyAfterESIP();
-		System.gc();
 	}
 }

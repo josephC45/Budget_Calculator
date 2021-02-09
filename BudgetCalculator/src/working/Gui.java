@@ -53,6 +53,9 @@ public class Gui extends JFrame {
 	private static int pngHeight = 400;
 	private static String homeFolder = System.getProperty("user.home");
 	
+	private static final String ACTUAL_EXPENSE = "Actual Expense";
+	private static final String EXPECTED_EXPENSE = "Expected Expense";
+	
 	//Sets the icon of the application in the top left of the window
 	private static void SetWindowIcon(JFrame frame) {
 		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
@@ -148,7 +151,7 @@ public class Gui extends JFrame {
 		frame.getContentPane().add(headerPanel, BorderLayout.BEFORE_FIRST_LINE);
 	}
 	
-	private static void AddChooseFileButtonFunctionality(JButton chooseFileButton, JTextField fileField) {
+	private static void AddChooseFileButtonFunctionality(JButton chooseFileButton) {
 		chooseFileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileToUse = new JFileChooser();
@@ -171,8 +174,8 @@ public class Gui extends JFrame {
 	}
 	
 	private static void AddLeftBodyUIFields(JPanel bodyPanel) {
-		JLabel inputTransactionLabel = new JLabel("Transaction:", JLabel.LEFT);
-		JLabel fileFieldLabel = new JLabel("File:", JLabel.LEFT);
+		JLabel inputTransactionLabel = new JLabel("Transaction:", javax.swing.SwingConstants.LEFT);
+		JLabel fileFieldLabel = new JLabel("File:", javax.swing.SwingConstants.LEFT);
 		JButton chooseFileButton = new JButton("Choose File");
 		
 		bodyPanel.add(inputTransactionLabel);
@@ -182,9 +185,10 @@ public class Gui extends JFrame {
 		bodyPanel.add(fileTxtField);
 		
 		bodyPanel.add(chooseFileButton);
-		AddChooseFileButtonFunctionality(chooseFileButton,fileTxtField);
+		AddChooseFileButtonFunctionality(chooseFileButton);
 	}
 	
+	//Creates the UI for the body (left side) of the frame.
 	private static void CreateLeftBodyUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Write/Calculate section");
 		JPanel leftBodyPanel = new JPanel();
@@ -199,17 +203,17 @@ public class Gui extends JFrame {
 	
 	private static CategoryDataset Create3DBarChartDataset() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(Ops.totalMonthlyTransactionGoal[0], "Expense", "Expected Expense");
-        dataset.addValue(Ops.totalMonthlyExpenses[0], "Expense", "Actual Expense");
+        dataset.addValue(Ops.totalMonthlyTransactionGoal[0], "Expense", EXPECTED_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyExpenses[0], "Expense", ACTUAL_EXPENSE);
 
-        dataset.addValue(Ops.totalMonthlyTransactionGoal[1], "Savings", "Expected Expense");
-        dataset.addValue(Ops.totalMonthlyExpenses[1], "Savings", "Actual Expense");
+        dataset.addValue(Ops.totalMonthlyTransactionGoal[1], "Savings", EXPECTED_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyExpenses[1], "Savings", ACTUAL_EXPENSE);
 
-        dataset.addValue(Ops.totalMonthlyTransactionGoal[2], "Investment", "Expected Expense");
-        dataset.addValue(Ops.totalMonthlyExpenses[2], "Investment", "Actual Expense");
+        dataset.addValue(Ops.totalMonthlyTransactionGoal[2], "Investment", EXPECTED_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyExpenses[2], "Investment", ACTUAL_EXPENSE);
 
-        dataset.addValue(Ops.totalMonthlyTransactionGoal[3], "Emergency", "Expected Expense");
-        dataset.addValue(Ops.totalMonthlyExpenses[3], "Emergency", "Actual Expense");
+        dataset.addValue(Ops.totalMonthlyTransactionGoal[3], "Emergency", EXPECTED_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyExpenses[3], "Emergency", ACTUAL_EXPENSE);
         
         return dataset;
     }
@@ -232,7 +236,7 @@ public class Gui extends JFrame {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		Hashtable<Integer, String> expenseHashTableForLineChart = Ops.expenseHashTblForLineChart;
-		TreeMap<Integer,String> treeMapOfExpenseHashTable = new TreeMap<Integer,String>(expenseHashTableForLineChart);
+		TreeMap<Integer,String> treeMapOfExpenseHashTable = new TreeMap<>(expenseHashTableForLineChart);
 		
 		Set<Integer> hash_set = treeMapOfExpenseHashTable.keySet();
 		Iterator<Integer> iteratorForSet = hash_set.iterator();
@@ -263,6 +267,7 @@ public class Gui extends JFrame {
 				
 	}
 	
+	//Creates the UI for the body (right side) of the frame
 	private static void CreateRightBodyUI(JFrame frame) {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
@@ -335,8 +340,10 @@ public class Gui extends JFrame {
 		AddFooterButtons(footerPanel,frame);
 	}
 	
+	
 	private static void ExitWindowAndProgram(JFrame frame) {
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e){
 				System.out.println("### Window and Program closed.");
 				System.exit(0);
@@ -364,6 +371,5 @@ public class Gui extends JFrame {
 	//Driving method for the Gui class.
 	public static void CreateGui() {
 		CreateWindowAndUI();
-		System.gc();
 	}
 }

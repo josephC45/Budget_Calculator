@@ -247,7 +247,7 @@ public class Ops {
 		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		try(bufferedWriter) {
+		try {
 			System.out.println("### Writing [" + finalTransaction + "] to txt file...");
 			bufferedWriter.write(finalTransaction);
 			bufferedWriter.newLine();

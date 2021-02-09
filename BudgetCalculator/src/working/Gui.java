@@ -13,10 +13,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,6 +38,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+
 public class Gui extends JFrame {
 	private static final long serialVersionUID = 0;
 	
@@ -56,7 +55,7 @@ public class Gui extends JFrame {
 	private static final String ACTUAL_EXPENSE = "Actual Expense";
 	private static final String EXPECTED_EXPENSE = "Expected Expense";
 	
-	//Sets the icon of the application in the top left of the window
+	// Sets the icon of the application in the top left of the window
 	private static void SetWindowIcon(JFrame frame) {
 		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
 		frame.setIconImage(icon);
@@ -70,7 +69,7 @@ public class Gui extends JFrame {
 	
 	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveBarGraphItem = new JMenuItem("Save Bar Graph");
-		saveBarGraphItem.addActionListener((event) -> {
+		saveBarGraphItem.addActionListener(event -> {
 			File barGraphPNG = new File(homeFolder,"monthly_budget_bar_graph.png");
 			try {
 				ChartUtilities.saveChartAsPNG(barGraphPNG, barGraphForPNG, pngWidth, pngHeight);
@@ -90,7 +89,7 @@ public class Gui extends JFrame {
 	
 	private static void CreateLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveLineChartItem = new JMenuItem("Save Line Chart");
-		saveLineChartItem.addActionListener((event) -> {
+		saveLineChartItem.addActionListener(event -> {
 			File lineChartPNG = new File(homeFolder,"monthly_expense_line_chart.png");
 			try {
 				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, pngWidth, pngHeight);
@@ -113,7 +112,7 @@ public class Gui extends JFrame {
 		JMenuItem manualItem = new JMenuItem("Manual");
 		File manualFile = new File(".\\budgetCalculatorManual.txt");
 		Desktop desktop = Desktop.getDesktop();
-		manualItem.addActionListener((event) -> {
+		manualItem.addActionListener(event -> {
 			try {
 				desktop.open(manualFile);
 			} catch (IOException e) {
@@ -165,11 +164,12 @@ public class Gui extends JFrame {
 					}
 				}
 				catch (Exception ex) {
+					
 					ex.printStackTrace();
 					System.out.println("--- Exception (dealing with file) occurred in the AddChooseFileButtonFunctionality method.");
 				}
 		        
-			}//end actionPerformed
+			}// end actionPerformed
 		});
 	}
 	
@@ -188,7 +188,7 @@ public class Gui extends JFrame {
 		AddChooseFileButtonFunctionality(chooseFileButton);
 	}
 	
-	//Creates the UI for the body (left side) of the frame.
+	// Creates the UI for the body (left side) of the frame.
 	private static void CreateLeftBodyUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Write/Calculate section");
 		JPanel leftBodyPanel = new JPanel();
@@ -235,16 +235,10 @@ public class Gui extends JFrame {
 		String series = "Expense trend over the month";
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-		Hashtable<Integer, String> expenseHashTableForLineChart = Ops.expenseHashTblForLineChart;
-		TreeMap<Integer,String> treeMapOfExpenseHashTable = new TreeMap<>(expenseHashTableForLineChart);
+		HashMap<Integer, String> expenseHashMapForLineChart = Ops.expenseHashTblForLineChart;
 		
-		Set<Integer> hash_set = treeMapOfExpenseHashTable.keySet();
-		Iterator<Integer> iteratorForSet = hash_set.iterator();
-		
-		while(iteratorForSet.hasNext()) {
-			
-			int key = iteratorForSet.next();
-			String[] hashValue = expenseHashTableForLineChart.get(key).split(":");
+		for(@SuppressWarnings("rawtypes") Map.Entry hm : expenseHashMapForLineChart.entrySet()){
+			String[] hashValue = expenseHashMapForLineChart.get(hm.getKey()).split(":");
 			BigDecimal amount = new BigDecimal(hashValue[0]);
 			String date = hashValue[1];
 			dataset.addValue(amount, series, date);
@@ -263,11 +257,10 @@ public class Gui extends JFrame {
 		frame.setMinimumSize(new java.awt.Dimension(600,400));
 		frame.getContentPane().add(chartPanel);
 		frame.pack();
-		return chartPanel;
-				
+		return chartPanel;		
 	}
 	
-	//Creates the UI for the body (right side) of the frame
+	// Creates the UI for the body (right side) of the frame
 	private static void CreateRightBodyUI(JFrame frame) {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
@@ -294,6 +287,7 @@ public class Gui extends JFrame {
 					String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
 					DisplayErrorMessagePopUp(nfeMessage);
 				}
+				
 				transactionField.setText("");
 			}
 		});
@@ -352,7 +346,7 @@ public class Gui extends JFrame {
 		});
 	}
 	
-	//Creates the window and calls UI methods to put Header, Body and Footer UI together.
+	// Creates the window and calls UI methods to put Header, Body and Footer UI together.
 	private static void CreateWindowAndUI() {
 		JFrame frame = new JFrame("Ledger Application");
 		SetWindowIcon(frame);
@@ -365,10 +359,9 @@ public class Gui extends JFrame {
 		frame.setSize(800,600);
 		frame.setLocation(EXIT_ON_CLOSE, ABORT);
 		frame.setVisible(true);
-		
 	}
 	
-	//Driving method for the Gui class.
+	// Driving method for the Gui class.
 	public static void CreateGui() {
 		CreateWindowAndUI();
 	}

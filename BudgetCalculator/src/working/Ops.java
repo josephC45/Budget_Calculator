@@ -11,11 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class Ops {
 		
-	private static Hashtable<Character,ArrayList<Ledger>> transactionHashTbl = new Hashtable<>();
+	private static HashMap<Character,ArrayList<Ledger>> transactionHashMap = new HashMap<>();
 	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<>();
 	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<>();
 	private static ArrayList<Ledger> investmentTransactionArrayList = new ArrayList<>();
@@ -31,27 +31,28 @@ public class Ops {
 	protected static BigDecimal [] totalMonthlyTransactionGoal;
 	protected static BigDecimal [] totalMonthlyExpenses;
 	
-	protected static Hashtable<Integer, String> expenseHashTblForLineChart = new Hashtable<>();
+	protected static HashMap<Integer, String> expenseHashTblForLineChart = new HashMap<>();
 	
 	
-	private static Hashtable<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashTbl(char transactionChoice) throws Exception{
+	private static HashMap<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashMap(char transactionChoice) throws Exception{
 		switch(transactionChoice) {
 			case 'E':
-				transactionHashTbl.put(transactionChoice,expenseTransactionArrayList);
+				transactionHashMap.put(transactionChoice,expenseTransactionArrayList);
 				break;
 			case 'S':
-				transactionHashTbl.put(transactionChoice,savingsTransactionArrayList);
+				transactionHashMap.put(transactionChoice,savingsTransactionArrayList);
 				break;
 			case 'I':
-				transactionHashTbl.put(transactionChoice,investmentTransactionArrayList);
+				transactionHashMap.put(transactionChoice,investmentTransactionArrayList);
 				break;
 			case 'P':
-				transactionHashTbl.put(transactionChoice, emergencyTransactionArrayList);
+				transactionHashMap.put(transactionChoice, emergencyTransactionArrayList);
 				break;
 			default:
 				throw new Exception("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
 		}
-		return transactionHashTbl;
+		
+		return transactionHashMap;
 	}
 	
 	private static void AddToAppropriateArrayList(Ledger ledger) throws Exception {
@@ -71,12 +72,11 @@ public class Ops {
 				break;
 			default:
 				throw new Exception("--- Error occurred in the AddToAppropriateArrayList method");
-
 		}
 	}
 	
-	//Adds up transactions per date
-	private static void AddToExpenseLineChartHashTbl(ArrayList<Ledger> expenses) {
+	// Adds up transactions per date
+	private static void AddToExpenseLineChartHashMap(ArrayList<Ledger> expenses) {
 		int resultCount = 0;
 		BigDecimal dailyExpense = new BigDecimal(0);
 		String tmpDate = null;
@@ -85,7 +85,7 @@ public class Ops {
 				tmpDate = transaction.GetTransactionDate();
 				dailyExpense = transaction.GetTransactionAmount();
 			}
-			//If we move onto the next date
+			// If we move onto the next date
 			else if(!tmpDate.equals(transaction.GetTransactionDate())){
 				tmpDate = transaction.GetTransactionDate();
 				dailyExpense = new BigDecimal(0);
@@ -95,13 +95,14 @@ public class Ops {
 				dailyExpense = dailyExpense.add(transaction.GetTransactionAmount());
 				transaction.SetTransactionAmount(dailyExpense);
 			}
+			
 			String hashValue = transaction.GetTransactionAmount() + ":" + transaction.GetTransactionDate();
 			expenseHashTblForLineChart.put(resultCount,hashValue);
 			resultCount++;
 		}
 	}
 	
-	//Parse txt -> add to appropriate arraylist -> add to hash table
+	// Parse txt -> add to appropriate arraylist -> add to hash table
 	private static void ParseTxt() throws NullPointerException, NumberFormatException, StringIndexOutOfBoundsException  {
 		Character transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
@@ -118,7 +119,7 @@ public class Ops {
 		        
 		        Ledger ledgerTransaction = new Ledger(transactionChoice,transactionTitle,transactionAmount,transactionDate);
 		        AddToAppropriateArrayList(ledgerTransaction);
-		        AddTransactionArrayListsToHashTbl(transactionChoice);
+		        AddTransactionArrayListsToHashMap(transactionChoice);
 		    }
 		    
 		} catch (IOException ioe) {
@@ -130,10 +131,11 @@ public class Ops {
 		    ex.printStackTrace();
 		    System.exit(0);
 		}
-		AddToExpenseLineChartHashTbl(expenseTransactionArrayList);
+		
+		AddToExpenseLineChartHashMap(expenseTransactionArrayList);
 	}
 	
-	//Establishes monthly income then breaks down input into a 50/40/5/5 split for budegetting reasons.
+	// Establishes monthly income then breaks down input into a 50/40/5/5 split for budgeting reasons.
 	private static void MonthlyBudgetRatio() {
 		BigDecimal monthlyIncome = BigDecimal.valueOf(5156.67);
 		BigDecimal ratioOfMonthlyIncomeForExpenses = BigDecimal.valueOf(0.50);
@@ -153,7 +155,6 @@ public class Ops {
 							+ "Savings: $" + monthlySavingsGoal + "\n" 
 							+ "Invest: $" + monthlyInvestmentGoal + "\n"
 							+ "Emergency: $" + monthlyEmergencyGoal + "\n";
-		
 	}
 	
 	private static BigDecimal TotalMonthlyExpenses(ArrayList<Ledger> expenses) {
@@ -161,8 +162,8 @@ public class Ops {
 		for(Ledger transaction : expenses) {
 			monthlyExpenses = monthlyExpenses.add(transaction.GetTransactionAmount());
 		}
-		return monthlyExpenses;
 		
+		return monthlyExpenses;
 	}
 	
 	private static BigDecimal TotalMonthlySavings(ArrayList<Ledger> savings) {
@@ -170,8 +171,8 @@ public class Ops {
 		for(Ledger transaction : savings) {
 			monthlySavings = monthlySavings.add(transaction.GetTransactionAmount());
 		}
-		return monthlySavings;
 		
+		return monthlySavings;
 	}
 	
 	private static BigDecimal TotalMonthlyInvestments(ArrayList<Ledger> investments) {
@@ -179,8 +180,8 @@ public class Ops {
 		for(Ledger transaction : investments) {
 			monthlyInvestments = monthlyInvestments.add(transaction.GetTransactionAmount());
 		}
-		return monthlyInvestments;
 		
+		return monthlyInvestments;
 	}
 	
 	private static BigDecimal TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
@@ -188,8 +189,8 @@ public class Ops {
 		for(Ledger transaction : emergencies) {
 			monthlyEmergencySetAside = monthlyEmergencySetAside.add(transaction.GetTransactionAmount());
 		}
-		return monthlyEmergencySetAside;
-			
+		
+		return monthlyEmergencySetAside;	
 	}
 	
 	private static void WriteResultsToTxtFile(BigDecimal monthlyExpenseTotal,BigDecimal monthlySavingsTotal,BigDecimal monthlyInvestmentTotal,BigDecimal monthlyEmergencyTotal,
@@ -220,7 +221,7 @@ public class Ops {
 		}
 	}
 	
-	//Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
+	// Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
 	private static void RemainingMoneyAfterESIP() {
 		BigDecimal monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		BigDecimal monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
@@ -238,7 +239,7 @@ public class Ops {
 		remainingExpenseAmount,remainingSavingsAmount,remainingInvestmentAmount,remainingEmergencyAmount);
 	}
 	
-	//Method used by the GUI's 'write' button
+	// Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
 		Character transactionChoice = transaction.charAt(0);
@@ -246,7 +247,7 @@ public class Ops {
 		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		try {
+		try(bufferedWriter) {
 			System.out.println("### Writing [" + finalTransaction + "] to txt file...");
 			bufferedWriter.write(finalTransaction);
 			bufferedWriter.newLine();
@@ -258,7 +259,7 @@ public class Ops {
 		}
 	}
 	
-	//Driving method of opsclass
+	// Driving method of Opsclass
 	public static void OpsMainDriver() {
 		ParseTxt();
 		MonthlyBudgetRatio();

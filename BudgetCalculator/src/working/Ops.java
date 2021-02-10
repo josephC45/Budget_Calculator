@@ -138,7 +138,7 @@ public class Ops {
 	
 	// Establishes monthly income then breaks down input into a 50/40/5/5 split for budgeting reasons.
 	private static void MonthlyBudgetRatio() {
-		BigDecimal monthlyIncome = BigDecimal.valueOf(5156.67);
+		BigDecimal monthlyIncome = BigDecimal.valueOf(5000.00);
 		BigDecimal ratioOfMonthlyIncomeForExpenses = BigDecimal.valueOf(0.50);
 		BigDecimal ratioOfMonthlyIncomeForSavings = BigDecimal.valueOf(0.40);
 		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = BigDecimal.valueOf(0.05);

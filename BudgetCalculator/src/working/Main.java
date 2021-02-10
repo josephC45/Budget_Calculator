@@ -1,11 +1,11 @@
 package working;
 
-/*
- * Driving class of the project
- */
+import org.tinylog.Logger;
+
+// Driving class of the project
 public class Main {
 	public static void main(String [] args) {
-		System.out.println("### The program has started.");
+		Logger.info("### The program has started.");
 		Gui.CreateGui();
 		
 	}

@@ -39,6 +39,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import org.tinylog.Logger;
+
 public class Gui extends JFrame {
 	private static final long serialVersionUID = 0;
 	
@@ -73,13 +75,14 @@ public class Gui extends JFrame {
 			File barGraphPNG = new File(homeFolder,"monthly_budget_bar_graph.png");
 			try {
 				ChartUtilities.saveChartAsPNG(barGraphPNG, barGraphForPNG, pngWidth, pngHeight);
-				System.out.println("### Bar Graph PNG was saved to your home folder.");
+				Logger.info("### Bar Graph PNG was saved to your home folder.");
 			} catch(IOException e){
 				e.printStackTrace();
-				System.out.println("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
+				Logger.error("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
 			} catch(IllegalArgumentException iae) {
 				String iaeMessage = "Make sure to first calculate your budget before attempting to save the bar graph as a png.";
 				DisplayErrorMessagePopUp(iaeMessage);
+				Logger.warn("~~~ " + iaeMessage);
 			}
 		});
 		
@@ -95,12 +98,13 @@ public class Gui extends JFrame {
 				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, pngWidth, pngHeight);
 			} catch(IOException e){
 				e.printStackTrace();
-				System.out.println("--- IOException occurred in the CreateMenuBar method.");
+				Logger.error("--- IOException occurred in the CreateMenuBar method.");
 			} catch(IllegalArgumentException iae) {
 				String iaeMessage = "Make sure to first calculate your budget before attempting to save the line chart as a png.";
 				DisplayErrorMessagePopUp(iaeMessage);
+				Logger.warn("~~~ " + iaeMessage);
 			}
-			System.out.println("### Line Chart PNG was saved to your home folder.");
+			Logger.info("### Line Chart PNG was saved to your home folder.");
 			
 		});
 		
@@ -117,7 +121,7 @@ public class Gui extends JFrame {
 				desktop.open(manualFile);
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("--- IOException occurred in the CreateMenuBar method.");
+				Logger.error("--- IOException occurred in the CreateMenuBar method.");
 			}
 		});
 		
@@ -164,9 +168,8 @@ public class Gui extends JFrame {
 					}
 				}
 				catch (Exception ex) {
-					
 					ex.printStackTrace();
-					System.out.println("--- Exception (dealing with file) occurred in the AddChooseFileButtonFunctionality method.");
+					Logger.error("--- Exception (dealing with file) occurred in the AddChooseFileButtonFunctionality method.");
 				}
 		        
 			}// end actionPerformed
@@ -257,7 +260,8 @@ public class Gui extends JFrame {
 		frame.setMinimumSize(new java.awt.Dimension(600,400));
 		frame.getContentPane().add(chartPanel);
 		frame.pack();
-		return chartPanel;		
+		return chartPanel;
+				
 	}
 	
 	// Creates the UI for the body (right side) of the frame
@@ -275,19 +279,21 @@ public class Gui extends JFrame {
 				try {
 					Ops.WriteTransactionToTxtFile(transaction);
 				} catch (IOException ioe) {
-					System.out.println("--- IOException occurred in the FooterWriteButtonFunctionality method.");
+					Logger.error("--- IOException occurred in the FooterWriteButtonFunctionality method.");
 					ioe.printStackTrace();
 				} catch (StringIndexOutOfBoundsException siobe) {
 					String siobeMessage = "Make sure you supply valid input to the transaction field.";
 					DisplayErrorMessagePopUp(siobeMessage);
+					Logger.warn("~~~ " + siobeMessage);
 				} catch (NullPointerException ne) { 
 					String neMessage = "Make sure to first supply a valid string and choose the correct txt file.";
 					DisplayErrorMessagePopUp(neMessage);
+					Logger.warn("~~~ " + neMessage);
 				} catch (NumberFormatException nfe) {
 					String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
 					DisplayErrorMessagePopUp(nfeMessage);
+					Logger.warn("~~~ " + nfeMessage);
 				}
-				
 				transactionField.setText("");
 			}
 		});
@@ -303,9 +309,11 @@ public class Gui extends JFrame {
 				} catch (NullPointerException ne) {
 					String neMessage = "Make sure you have chosen the correct file containing your ESIP info.";
 					DisplayErrorMessagePopUp(neMessage);
+					Logger.warn("~~~ " + neMessage);
 				} catch (NumberFormatException nfe) {
 					String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
 					DisplayErrorMessagePopUp(nfeMessage);
+					Logger.warn("~~~ " + nfeMessage);
 				}
 			}
 		});
@@ -339,7 +347,7 @@ public class Gui extends JFrame {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e){
-				System.out.println("### Window and Program closed.");
+				Logger.info("### Window and Program closed.");
 				System.exit(0);
 			}
 			
@@ -359,6 +367,7 @@ public class Gui extends JFrame {
 		frame.setSize(800,600);
 		frame.setLocation(EXIT_ON_CLOSE, ABORT);
 		frame.setVisible(true);
+		
 	}
 	
 	// Driving method for the Gui class.

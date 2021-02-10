@@ -13,6 +13,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.tinylog.Logger;
+
 public class Ops {
 		
 	private static HashMap<Character,ArrayList<Ledger>> transactionHashMap = new HashMap<>();
@@ -49,9 +51,9 @@ public class Ops {
 				transactionHashMap.put(transactionChoice, emergencyTransactionArrayList);
 				break;
 			default:
+				Logger.error("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
 				throw new Exception("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
 		}
-		
 		return transactionHashMap;
 	}
 	
@@ -71,6 +73,7 @@ public class Ops {
 				emergencyTransactionArrayList.add(ledger);
 				break;
 			default:
+				Logger.error("--- Error occurred in the AddToAppropriateArrayList method");
 				throw new Exception("--- Error occurred in the AddToAppropriateArrayList method");
 		}
 	}
@@ -95,7 +98,6 @@ public class Ops {
 				dailyExpense = dailyExpense.add(transaction.GetTransactionAmount());
 				transaction.SetTransactionAmount(dailyExpense);
 			}
-			
 			String hashValue = transaction.GetTransactionAmount() + ":" + transaction.GetTransactionDate();
 			expenseHashTblForLineChart.put(resultCount,hashValue);
 			resultCount++;
@@ -123,15 +125,14 @@ public class Ops {
 		    }
 		    
 		} catch (IOException ioe) {
-		    System.out.println("--- IOException occurred in ParseTxt method.");
+		    Logger.error("--- IOException occurred in ParseTxt method.");
 		    ioe.printStackTrace();
 		    System.exit(0);
 		} catch (Exception ex) {
-		    System.out.println("--- Exception occurred in ParseTxt method.");
+		    Logger.error("--- Exception occurred in ParseTxt method.");
 		    ex.printStackTrace();
 		    System.exit(0);
 		}
-		
 		AddToExpenseLineChartHashMap(expenseTransactionArrayList);
 	}
 	
@@ -162,7 +163,6 @@ public class Ops {
 		for(Ledger transaction : expenses) {
 			monthlyExpenses = monthlyExpenses.add(transaction.GetTransactionAmount());
 		}
-		
 		return monthlyExpenses;
 	}
 	
@@ -171,7 +171,6 @@ public class Ops {
 		for(Ledger transaction : savings) {
 			monthlySavings = monthlySavings.add(transaction.GetTransactionAmount());
 		}
-		
 		return monthlySavings;
 	}
 	
@@ -180,7 +179,6 @@ public class Ops {
 		for(Ledger transaction : investments) {
 			monthlyInvestments = monthlyInvestments.add(transaction.GetTransactionAmount());
 		}
-		
 		return monthlyInvestments;
 	}
 	
@@ -189,7 +187,6 @@ public class Ops {
 		for(Ledger transaction : emergencies) {
 			monthlyEmergencySetAside = monthlyEmergencySetAside.add(transaction.GetTransactionAmount());
 		}
-		
 		return monthlyEmergencySetAside;	
 	}
 	
@@ -198,7 +195,7 @@ public class Ops {
 		try {
 			String homeFolder = System.getProperty("user.home");
 			File monthlyBudgetFile = new File(homeFolder, "monthly_budget_results.txt");
-			System.out.println("### monthly_budget_results.txt was created");
+			Logger.info("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
 			String textForFile = MessageFormat.format("{0}" +
 					 	"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
@@ -212,16 +209,15 @@ public class Ops {
 			monthlyBudgetFileWriter.write(textForFile);
 			monthlyBudgetFileWriter.close();
 			
-			System.out.println("### Results were written to monthly_budget_results.txt file within the users 'home' directory"
+			Logger.info("### Results were written to monthly_budget_results.txt file within the users 'home' directory"
 					+ " and the file has closed.");
 		}
 		catch(IOException e) {
-			System.out.println("--- An error occurred creating and writing to file due to an IOException.");
+			Logger.error("--- An error occurred creating and writing to file due to an IOException.");
 		    e.printStackTrace();
 		}
 	}
 	
-	// Prints the remaining amount (if any) for the expense, savings, and investment after the monthly use.
 	private static void RemainingMoneyAfterESIP() {
 		BigDecimal monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		BigDecimal monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
@@ -239,7 +235,6 @@ public class Ops {
 		remainingExpenseAmount,remainingSavingsAmount,remainingInvestmentAmount,remainingEmergencyAmount);
 	}
 	
-	// Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
 		Character transactionChoice = transaction.charAt(0);
@@ -248,10 +243,10 @@ public class Ops {
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		try {
-			System.out.println("### Writing [" + finalTransaction + "] to txt file...");
+			Logger.info("### Writing [" + finalTransaction + "] to txt file...");
 			bufferedWriter.write(finalTransaction);
 			bufferedWriter.newLine();
-			System.out.println("### Transactions was successfully written to txt file.");
+			Logger.info("### Transactions was successfully written to txt file.");
 		}
 		finally {
 			bufferedWriter.flush();

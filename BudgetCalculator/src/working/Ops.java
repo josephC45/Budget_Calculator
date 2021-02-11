@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 
 public class Ops {
 		
+	private static final String DELIMITER = ",";
 	private static HashMap<Character,ArrayList<Ledger>> transactionHashMap = new HashMap<>();
 	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<>();
 	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<>();
@@ -36,7 +37,7 @@ public class Ops {
 	protected static HashMap<Integer, String> expenseHashTblForLineChart = new HashMap<>();
 	
 	
-	private static HashMap<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashMap(char transactionChoice) throws Exception{
+	private static HashMap<Character,ArrayList<Ledger>> AddTransactionArrayListsToHashMap(char transactionChoice) throws IllegalArgumentException{
 		switch(transactionChoice) {
 			case 'E':
 				transactionHashMap.put(transactionChoice,expenseTransactionArrayList);
@@ -52,12 +53,12 @@ public class Ops {
 				break;
 			default:
 				Logger.error("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
-				throw new Exception("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
+				throw new IllegalArgumentException("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
 		}
 		return transactionHashMap;
 	}
 	
-	private static void AddToAppropriateArrayList(Ledger ledger) throws Exception {
+	private static void AddToAppropriateArrayList(Ledger ledger) throws IllegalArgumentException {
 		Character transactionChoice = ledger.GetTransactionChoice();
 		switch(transactionChoice) {
 			case 'E':
@@ -74,7 +75,7 @@ public class Ops {
 				break;
 			default:
 				Logger.error("--- Error occurred in the AddToAppropriateArrayList method");
-				throw new Exception("--- Error occurred in the AddToAppropriateArrayList method");
+				throw new IllegalArgumentException("--- Error occurred in the AddToAppropriateArrayList method");
 		}
 	}
 	
@@ -108,7 +109,6 @@ public class Ops {
 	private static void ParseTxt() throws NullPointerException, NumberFormatException, StringIndexOutOfBoundsException  {
 		Character transactionChoice = '\0';
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
-		    String DELIMITER = ",";
 		    String line;
 		    while ((line = br.readLine()) != null) {
 
@@ -128,6 +128,10 @@ public class Ops {
 		    Logger.error("--- IOException occurred in ParseTxt method.");
 		    ioe.printStackTrace();
 		    System.exit(0);
+		} catch (IllegalArgumentException iae) {
+			Logger.error("--- IllegalArgumentException occurred in the ParseTxt method, check the AddToAppropriateArrayList and AddTransactionArrayListsToHashMap methods");
+			iae.printStackTrace();
+			System.exit(0);
 		} catch (Exception ex) {
 		    Logger.error("--- Exception occurred in ParseTxt method.");
 		    ex.printStackTrace();
@@ -190,22 +194,30 @@ public class Ops {
 		return monthlyEmergencySetAside;	
 	}
 	
-	private static void WriteResultsToTxtFile(BigDecimal monthlyExpenseTotal,BigDecimal monthlySavingsTotal,BigDecimal monthlyInvestmentTotal,BigDecimal monthlyEmergencyTotal,
-	BigDecimal remainingExpenseAmount,BigDecimal remainingSavingsAmount,BigDecimal remainingInvestmentAmount,BigDecimal remainingEmergencyAmount) {
+	private static String TotalMonthlySpendingString(BigDecimal monthlyExpenseTotal,BigDecimal 
+	monthlySavingsTotal,BigDecimal monthlyInvestmentTotal,BigDecimal monthlyEmergencyTotal) {
+		return MessageFormat.format("This month, you spent in total, Expense: ${0}, Saving: ${1}, Investment: ${2}, Emergency: ${3}" + "\n",
+		monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal);
+	}
+	
+	private static String RemainingMoneyString(BigDecimal remainingExpenseAmount,
+	BigDecimal remainingSavingsAmount, BigDecimal remainingInvestmentAmount,BigDecimal remainingEmergencyAmount) {
+		return MessageFormat.format("After calculating the monthly expenses, savings, investments and emergencies based on a 50/40/5/5 breakdown, " + "\n" + 
+				"Expense: ${0}" + "\n" + 
+				"Savings: ${1}" + "\n" + 
+				"Invest: ${2}" + "\n" +
+				"Emergency: ${3}" + "\n",
+				remainingExpenseAmount,remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+	}
+	
+	private static void WriteResultsToTxtFile(String totalMonthlySpendingString, String remainingMoneyString) {
 		try {
 			String homeFolder = System.getProperty("user.home");
 			File monthlyBudgetFile = new File(homeFolder, "monthly_budget_results.txt");
 			Logger.info("### monthly_budget_results.txt was created");
 			FileWriter monthlyBudgetFileWriter = new FileWriter(monthlyBudgetFile);
-			String textForFile = MessageFormat.format("{0}" +
-					 	"This month, you spent in total, Expense: ${1}, Saving: ${2}, Investment: ${3}, Emergency: ${4}" + "\n" +
-						"After calculating the monthly expenses, savings, and investments based on a 50/40/5/5 breakdown, " + "\n" + 
-						"Expense: ${5}" + "\n" + 
-						"Savings: ${6}" + "\n" + 
-						"Invest: ${7}" + "\n" +
-						"Emergency: ${8}" + "\n",
-						budgetGoalString, monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal, 
-						remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+			String textForFile = budgetGoalString + totalMonthlySpendingString + remainingMoneyString;
+			
 			monthlyBudgetFileWriter.write(textForFile);
 			monthlyBudgetFileWriter.close();
 			
@@ -218,23 +230,25 @@ public class Ops {
 		}
 	}
 	
-	private static void RemainingMoneyAfterESIP() {
+	private static void CalculateRemainingMoneyAfterESIPAndWriteResultsToTxt() {
 		BigDecimal monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		BigDecimal monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
 		BigDecimal monthlyInvestmentTotal = TotalMonthlyInvestments(investmentTransactionArrayList);
 		BigDecimal monthlyEmergencyTotal = TotalMonthlyForEmergency(emergencyTransactionArrayList);
 		
-		totalMonthlyExpenses = new BigDecimal[]{monthlyExpenseTotal,monthlySavingsTotal,monthlyInvestmentTotal,monthlyEmergencyTotal};
+		totalMonthlyExpenses = new BigDecimal[]{monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal};
 		
 		BigDecimal remainingExpenseAmount = monthlyExpenseGoal.subtract(monthlyExpenseTotal);
 		BigDecimal remainingSavingsAmount = monthlySavingsGoal.subtract(monthlySavingsTotal);
 		BigDecimal remainingInvestmentAmount = monthlyInvestmentGoal.subtract(monthlyInvestmentTotal);
 		BigDecimal remainingEmergencyAmount = monthlyEmergencyGoal.subtract(monthlyEmergencyTotal);
 		
-		WriteResultsToTxtFile(monthlyExpenseTotal,monthlySavingsTotal,monthlyInvestmentTotal,monthlyEmergencyTotal,
-		remainingExpenseAmount,remainingSavingsAmount,remainingInvestmentAmount,remainingEmergencyAmount);
+		String totalMonthlySpendingString = TotalMonthlySpendingString(monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal);
+		String remainingMoneyString = RemainingMoneyString(remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+		WriteResultsToTxtFile(totalMonthlySpendingString, remainingMoneyString);
 	}
 	
+	// Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
 		Character transactionChoice = transaction.charAt(0);
@@ -258,6 +272,6 @@ public class Ops {
 	public static void OpsMainDriver() {
 		ParseTxt();
 		MonthlyBudgetRatio();
-		RemainingMoneyAfterESIP();
+		CalculateRemainingMoneyAfterESIPAndWriteResultsToTxt();
 	}
 }

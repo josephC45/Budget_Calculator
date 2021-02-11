@@ -127,15 +127,15 @@ public class Ops {
 		} catch (IOException ioe) {
 		    Logger.error("--- IOException occurred in ParseTxt method.");
 		    ioe.printStackTrace();
-		    System.exit(0);
+		    System.exit(1);
 		} catch (IllegalArgumentException iae) {
 			Logger.error("--- IllegalArgumentException occurred in the ParseTxt method, check the AddToAppropriateArrayList and AddTransactionArrayListsToHashMap methods");
 			iae.printStackTrace();
-			System.exit(0);
+			System.exit(1);
 		} catch (Exception ex) {
 		    Logger.error("--- Exception occurred in ParseTxt method.");
 		    ex.printStackTrace();
-		    System.exit(0);
+		    System.exit(1);
 		}
 		AddToExpenseLineChartHashMap(expenseTransactionArrayList);
 	}

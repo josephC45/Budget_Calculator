@@ -6,8 +6,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -155,8 +153,7 @@ public class Gui extends JFrame {
 	}
 	
 	private static void AddChooseFileButtonFunctionality(JButton chooseFileButton) {
-		chooseFileButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		chooseFileButton.addActionListener(e -> {
 				JFileChooser fileToUse = new JFileChooser();
 				int returnVal = fileToUse.showSaveDialog(fileToUse);
 				try {
@@ -171,8 +168,6 @@ public class Gui extends JFrame {
 					ex.printStackTrace();
 					Logger.error("--- Exception (dealing with file) occurred in the AddChooseFileButtonFunctionality method.");
 				}
-		        
-			}// end actionPerformed
 		});
 	}
 	
@@ -191,7 +186,6 @@ public class Gui extends JFrame {
 		AddChooseFileButtonFunctionality(chooseFileButton);
 	}
 	
-	// Creates the UI for the body (left side) of the frame.
 	private static void CreateLeftBodyUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Write/Calculate section");
 		JPanel leftBodyPanel = new JPanel();
@@ -264,7 +258,6 @@ public class Gui extends JFrame {
 				
 	}
 	
-	// Creates the UI for the body (right side) of the frame
 	private static void CreateRightBodyUI(JFrame frame) {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
@@ -273,8 +266,7 @@ public class Gui extends JFrame {
 	}
 	
 	private static void FooterWriteButtonFunctionality(JButton write) {
-		write.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		write.addActionListener(e -> {
 				String transaction = transactionField.getText();
 				try {
 					Ops.WriteTransactionToTxtFile(transaction);
@@ -295,14 +287,12 @@ public class Gui extends JFrame {
 					Logger.warn("~~~ " + nfeMessage);
 				}
 				transactionField.setText("");
-			}
 		});
 	}
 		
 	private static void FooterCalculateButtonFunctionality(JButton calculate, JFrame frame) {
-		calculate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("### Calculating budget...");
+		calculate.addActionListener(e -> {
+				Logger.info("### Calculating budget...");
 				try {
 					Ops.OpsMainDriver();
 					CreateRightBodyUI(frame);
@@ -315,7 +305,6 @@ public class Gui extends JFrame {
 					DisplayErrorMessagePopUp(nfeMessage);
 					Logger.warn("~~~ " + nfeMessage);
 				}
-			}
 		});
 	}
 	
@@ -354,7 +343,6 @@ public class Gui extends JFrame {
 		});
 	}
 	
-	// Creates the window and calls UI methods to put Header, Body and Footer UI together.
 	private static void CreateWindowAndUI() {
 		JFrame frame = new JFrame("Ledger Application");
 		SetWindowIcon(frame);

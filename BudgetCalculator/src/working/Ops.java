@@ -248,17 +248,21 @@ public class Ops {
 		WriteResultsToTxtFile(totalMonthlySpendingString, remainingMoneyString);
 	}
 	
+	private static String FormatTransactionString(String transaction) {
+		transaction = transaction.replaceAll("\\s", "");
+		Character transactionChoice = transaction.charAt(0);
+		Character transactionChoiceToUpperCase = Character.toUpperCase(transactionChoice);
+		return transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
+	}
+	
 	// Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
-		Character transactionChoice = transaction.charAt(0);
-		Character transactionChoiceToUpperCase = Character.toUpperCase(transactionChoice);
-		String finalTransaction = transaction.replaceFirst("["+ transactionChoice + "]", transactionChoiceToUpperCase.toString());
-		
+		String formattedTransaction = FormatTransactionString(transaction);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		try {
-			Logger.info("### Writing [" + finalTransaction + "] to txt file...");
-			bufferedWriter.write(finalTransaction);
+			Logger.info("### Writing [" + formattedTransaction + "] to txt file...");
+			bufferedWriter.write(formattedTransaction);
 			bufferedWriter.newLine();
 			Logger.info("### Transactions was successfully written to txt file.");
 		}

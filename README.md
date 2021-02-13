@@ -19,15 +19,15 @@ The program takes a given monthly income (**which you have to set in the Ops cla
 
 View the code from the _MonthlyBudgetRatio()_ method below:
 
-   		BigDecimal monthlyIncome = new BigDecimal(5000.00);
-		BigDecimal ratioOfMonthlyIncomeForExpenses = new BigDecimal(0.50);
-		BigDecimal ratioOfMonthlyIncomeForSavings = new BigDecimal(0.40);
-		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = new BigDecimal(0.05);
+   		BigDecimal monthlyIncome = BigDecimal.valueOf(5000.00);
+		BigDecimal ratioOfMonthlyIncomeForExpenses = BigDecimal.valueOf(0.50);
+		BigDecimal ratioOfMonthlyIncomeForSavings = BigDecimal.valueOf(0.40);
+		BigDecimal ratioOfMonthlyIncomeForInvestmentAndEmergencies = BigDecimal.valueOf(0.05);
 		
-		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses);
-		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings);
-		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
-		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies);
+		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses).setScale(2, RoundingMode.CEILING);
+		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings).setScale(2, RoundingMode.CEILING);
+		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
+		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
 
 ## The process:
 1. You create a txt file where you will create a entry with a transaction choice of:

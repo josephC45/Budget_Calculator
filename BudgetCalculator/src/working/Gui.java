@@ -309,7 +309,7 @@ public class Gui extends JFrame {
 	}
 	
 	private static void AddFooterButtons(JPanel footerPanel, JFrame frame) {
-		JButton writeInputToTxt = new JButton("Write");
+		JButton writeInputToTxt = new JButton("Write To File");
 		JButton calculateInputToTxt = new JButton("Calculate Budget");
 		footerPanel.add(writeInputToTxt);
 		footerPanel.add(calculateInputToTxt);
@@ -344,7 +344,7 @@ public class Gui extends JFrame {
 	}
 	
 	private static void CreateWindowAndUI() {
-		JFrame frame = new JFrame("Ledger Application");
+		JFrame frame = new JFrame("Budget App");
 		SetWindowIcon(frame);
 		CreateMenuBar(frame);
 		CreateHeaderUI(frame);

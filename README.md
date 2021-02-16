@@ -11,10 +11,10 @@ The program takes a given monthly income (**which you have to set in the Ops cla
         Reserve (Emergencies) : Car, Medical...
 
 * By default the income is set to 5K a month with:
-    * Expenses : 50%
-    * Savings : 40%
-    * Investment : 5%
-    * Emergency Reserve: 5%
+  * Expenses : 50%
+  * Savings : 40%
+  * Investment : 5%
+  * Emergency Reserve: 5%
 
 
 View the code from the _MonthlyBudgetRatio()_ method below:

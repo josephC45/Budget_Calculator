@@ -14,7 +14,7 @@ The program takes a given monthly income (**which you have to set in the Ops cla
     * Expenses : 50%
     * Savings : 40%
     * Investment : 5%
-    * Particulars/Emergencies : 5%
+    * Emergency Reserve: 5%
 
 
 View the code from the _MonthlyBudgetRatio()_ method below:
@@ -27,14 +27,14 @@ View the code from the _MonthlyBudgetRatio()_ method below:
 		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses).setScale(2, RoundingMode.CEILING);
 		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings).setScale(2, RoundingMode.CEILING);
 		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
-		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
+		monthlyEmergencyReserveGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
 
 ## The process:
 1. You create a txt file where you will create a entry with a transaction choice of:
     * E : Expense
     * S : Savings
     * I : Investment
-    * P : Particulars/Emergency
+    * R : Reserve (Emergency)
 
 2. In the transaction text box a user would insert a 'transaction' such as:
    

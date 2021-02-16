@@ -22,12 +22,12 @@ public class Ops {
 	private static ArrayList<Ledger> expenseTransactionArrayList = new ArrayList<>();
 	private static ArrayList<Ledger> savingsTransactionArrayList = new ArrayList<>();
 	private static ArrayList<Ledger> investmentTransactionArrayList = new ArrayList<>();
-	private static ArrayList<Ledger> emergencyTransactionArrayList = new ArrayList<>();
+	private static ArrayList<Ledger> emergencyReserveTransactionArrayList = new ArrayList<>();
 	
 	private static BigDecimal monthlyExpenseGoal = new BigDecimal(0);
 	private static BigDecimal monthlySavingsGoal = new BigDecimal(0);
 	private static BigDecimal monthlyInvestmentGoal = new BigDecimal(0);
-	private static BigDecimal monthlyEmergencyGoal = new BigDecimal(0);
+	private static BigDecimal monthlyEmergencyReserveGoal = new BigDecimal(0);
 	
 	private static String budgetGoalString = null;
 		
@@ -48,8 +48,8 @@ public class Ops {
 			case 'I':
 				transactionHashMap.put(transactionChoice,investmentTransactionArrayList);
 				break;
-			case 'P':
-				transactionHashMap.put(transactionChoice, emergencyTransactionArrayList);
+			case 'R':
+				transactionHashMap.put(transactionChoice, emergencyReserveTransactionArrayList);
 				break;
 			default:
 				Logger.error("--- Error occurred in the AddTransactionArrayListsToHashTbl method");
@@ -70,8 +70,8 @@ public class Ops {
 			case 'I':
 				investmentTransactionArrayList.add(ledger);
 				break;
-			case 'P':
-				emergencyTransactionArrayList.add(ledger);
+			case 'R':
+				emergencyReserveTransactionArrayList.add(ledger);
 				break;
 			default:
 				Logger.error("--- Error occurred in the AddToAppropriateArrayList method");
@@ -111,13 +111,13 @@ public class Ops {
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(Gui.filePath))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-
-		        String[] esipTransaction = line.split(DELIMITER);
+		    	
+		        String[] esirTransaction = line.split(DELIMITER);
 		        
-		        transactionChoice = esipTransaction[0].charAt(0);
-		        String transactionTitle = esipTransaction[1];
-		        BigDecimal transactionAmount = new BigDecimal(esipTransaction[2]);
-		        String transactionDate = esipTransaction[3];
+		        transactionChoice = esirTransaction[0].charAt(0);
+		        String transactionTitle = esirTransaction[1];
+		        BigDecimal transactionAmount = new BigDecimal(esirTransaction[2]);
+		        String transactionDate = esirTransaction[3];
 		        
 		        Ledger ledgerTransaction = new Ledger(transactionChoice,transactionTitle,transactionAmount,transactionDate);
 		        AddToAppropriateArrayList(ledgerTransaction);
@@ -150,16 +150,16 @@ public class Ops {
 		monthlyExpenseGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForExpenses).setScale(2, RoundingMode.CEILING);
 		monthlySavingsGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForSavings).setScale(2, RoundingMode.CEILING);
 		monthlyInvestmentGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
-		monthlyEmergencyGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
+		monthlyEmergencyReserveGoal = monthlyIncome.multiply(ratioOfMonthlyIncomeForInvestmentAndEmergencies).setScale(2, RoundingMode.CEILING);
 		
-		totalMonthlyTransactionGoal = new BigDecimal[]{monthlyExpenseGoal,monthlySavingsGoal,monthlyInvestmentGoal,monthlyEmergencyGoal};
+		totalMonthlyTransactionGoal = new BigDecimal[]{monthlyExpenseGoal,monthlySavingsGoal,monthlyInvestmentGoal,monthlyEmergencyReserveGoal};
 		
 		budgetGoalString = "With a 50/40/5/5 split of Expenses, Savings, Investing and Emergencies your budget "
 							+ "looks like: " + "\n"
 							+ "Expense: $" + monthlyExpenseGoal + "\n" 
 							+ "Savings: $" + monthlySavingsGoal + "\n" 
 							+ "Invest: $" + monthlyInvestmentGoal + "\n"
-							+ "Emergency: $" + monthlyEmergencyGoal + "\n";
+							+ "Emergency Reserve: $" + monthlyEmergencyReserveGoal + "\n";
 	}
 	
 	private static BigDecimal TotalMonthlyExpenses(ArrayList<Ledger> expenses) {
@@ -186,28 +186,28 @@ public class Ops {
 		return monthlyInvestments;
 	}
 	
-	private static BigDecimal TotalMonthlyForEmergency(ArrayList<Ledger> emergencies) {
-		BigDecimal monthlyEmergencySetAside = new BigDecimal(0);
+	private static BigDecimal TotalMonthlyForEmergencyReserve(ArrayList<Ledger> emergencies) {
+		BigDecimal monthlyEmergencyReserveSetAside = new BigDecimal(0);
 		for(Ledger transaction : emergencies) {
-			monthlyEmergencySetAside = monthlyEmergencySetAside.add(transaction.GetTransactionAmount());
+			monthlyEmergencyReserveSetAside = monthlyEmergencyReserveSetAside.add(transaction.GetTransactionAmount());
 		}
-		return monthlyEmergencySetAside;	
+		return monthlyEmergencyReserveSetAside;	
 	}
 	
 	private static String TotalMonthlySpendingString(BigDecimal monthlyExpenseTotal,BigDecimal 
-	monthlySavingsTotal,BigDecimal monthlyInvestmentTotal,BigDecimal monthlyEmergencyTotal) {
+	monthlySavingsTotal,BigDecimal monthlyInvestmentTotal,BigDecimal monthlyEmergencyReserveTotal) {
 		return MessageFormat.format("This month, you spent in total, Expense: ${0}, Saving: ${1}, Investment: ${2}, Emergency: ${3}" + "\n",
-		monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal);
+		monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyReserveTotal);
 	}
 	
 	private static String RemainingMoneyString(BigDecimal remainingExpenseAmount,
-	BigDecimal remainingSavingsAmount, BigDecimal remainingInvestmentAmount,BigDecimal remainingEmergencyAmount) {
+	BigDecimal remainingSavingsAmount, BigDecimal remainingInvestmentAmount,BigDecimal remainingEmergencyReserveAmount) {
 		return MessageFormat.format("After calculating the monthly expenses, savings, investments and emergencies based on a 50/40/5/5 breakdown, " + "\n" + 
 				"Expense: ${0}" + "\n" + 
 				"Savings: ${1}" + "\n" + 
 				"Invest: ${2}" + "\n" +
-				"Emergency: ${3}" + "\n",
-				remainingExpenseAmount,remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+				"Emergency Reserve: ${3}" + "\n",
+				remainingExpenseAmount,remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyReserveAmount);
 	}
 	
 	private static void WriteResultsToTxtFile(String totalMonthlySpendingString, String remainingMoneyString) {
@@ -230,21 +230,21 @@ public class Ops {
 		}
 	}
 	
-	private static void CalculateRemainingMoneyAfterESIPAndWriteResultsToTxt() {
+	private static void CalculateRemainingMoneyAfterESIRAndWriteResultsToTxt() {
 		BigDecimal monthlyExpenseTotal = TotalMonthlyExpenses(expenseTransactionArrayList);
 		BigDecimal monthlySavingsTotal = TotalMonthlySavings(savingsTransactionArrayList);
 		BigDecimal monthlyInvestmentTotal = TotalMonthlyInvestments(investmentTransactionArrayList);
-		BigDecimal monthlyEmergencyTotal = TotalMonthlyForEmergency(emergencyTransactionArrayList);
+		BigDecimal monthlyEmergencyReserveTotal = TotalMonthlyForEmergencyReserve(emergencyReserveTransactionArrayList);
 		
-		totalMonthlyExpenses = new BigDecimal[]{monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal};
+		totalMonthlyExpenses = new BigDecimal[]{monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyReserveTotal};
 		
 		BigDecimal remainingExpenseAmount = monthlyExpenseGoal.subtract(monthlyExpenseTotal);
 		BigDecimal remainingSavingsAmount = monthlySavingsGoal.subtract(monthlySavingsTotal);
 		BigDecimal remainingInvestmentAmount = monthlyInvestmentGoal.subtract(monthlyInvestmentTotal);
-		BigDecimal remainingEmergencyAmount = monthlyEmergencyGoal.subtract(monthlyEmergencyTotal);
+		BigDecimal remainingEmergencyReserveAmount = monthlyEmergencyReserveGoal.subtract(monthlyEmergencyReserveTotal);
 		
-		String totalMonthlySpendingString = TotalMonthlySpendingString(monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyTotal);
-		String remainingMoneyString = RemainingMoneyString(remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyAmount);
+		String totalMonthlySpendingString = TotalMonthlySpendingString(monthlyExpenseTotal, monthlySavingsTotal, monthlyInvestmentTotal, monthlyEmergencyReserveTotal);
+		String remainingMoneyString = RemainingMoneyString(remainingExpenseAmount, remainingSavingsAmount, remainingInvestmentAmount, remainingEmergencyReserveAmount);
 		WriteResultsToTxtFile(totalMonthlySpendingString, remainingMoneyString);
 	}
 	
@@ -258,11 +258,11 @@ public class Ops {
 	// Method used by the GUI's 'write' button
 	protected static void WriteTransactionToTxtFile(String transaction) throws IOException {
 		FileWriter fileWriter = new FileWriter(Gui.filePath,true);
-		String formattedTransaction = FormatTransactionString(transaction);
+		String finalTransaction = FormatTransactionString(transaction);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		try {
-			Logger.info("### Writing [" + formattedTransaction + "] to txt file...");
-			bufferedWriter.write(formattedTransaction);
+			Logger.info("### Writing [" + finalTransaction + "] to txt file...");
+			bufferedWriter.write(finalTransaction);
 			bufferedWriter.newLine();
 			Logger.info("### Transactions was successfully written to txt file.");
 		}
@@ -276,6 +276,6 @@ public class Ops {
 	public static void OpsMainDriver() {
 		ParseTxt();
 		MonthlyBudgetRatio();
-		CalculateRemainingMoneyAfterESIPAndWriteResultsToTxt();
+		CalculateRemainingMoneyAfterESIRAndWriteResultsToTxt();
 	}
 }

@@ -48,9 +48,9 @@ View the code from the _MonthlyBudgetRatio()_ method below:
 5. Once the button has been pressed, a report will be generated (in the users home folder) along with a bar graph and a line chart.
 
     * The Bar Graph
-        * Displays two groupings of bars, one dedicated to your monthly spending goal, and the other would be your actual spending that you documented.
+      * Displays two groupings of bars, one dedicated to your monthly spending goal, and the other would be your actual spending that you documented.
     * The Line Chart
-        * Displays your Expense spending trend over the duration you were reporting for.
+      * Displays your Expense spending trend over the duration you were reporting for.
         
 You also have the ability to save the bar graph and the line chart to separate png's through the _'File'_ menubar.
 

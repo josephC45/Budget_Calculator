@@ -209,8 +209,8 @@ public class Gui extends JFrame {
         dataset.addValue(Ops.totalMonthlyTransactionGoal[2], "Investment", EXPECTED_EXPENSE);
         dataset.addValue(Ops.totalMonthlyExpenses[2], "Investment", ACTUAL_EXPENSE);
 
-        dataset.addValue(Ops.totalMonthlyTransactionGoal[3], "Emergency", EXPECTED_EXPENSE);
-        dataset.addValue(Ops.totalMonthlyExpenses[3], "Emergency", ACTUAL_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyTransactionGoal[3], "Reserve (Emergency)", EXPECTED_EXPENSE);
+        dataset.addValue(Ops.totalMonthlyExpenses[3], "Reserve (Emergency)", ACTUAL_EXPENSE);
         
         return dataset;
     }

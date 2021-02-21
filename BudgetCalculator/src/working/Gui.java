@@ -353,7 +353,7 @@ public class Gui extends JFrame {
 		CreateFooterUI(frame);
 		ExitWindowAndProgram(frame);
 
-		frame.setSize(800, 600);
+		frame.setSize(new Dimension(800, 600));
 		frame.setLocation(EXIT_ON_CLOSE, ABORT);
 		frame.setVisible(true);
 

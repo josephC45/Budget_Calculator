@@ -3,6 +3,7 @@ package working;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
@@ -222,10 +223,8 @@ public class Gui extends JFrame {
 				Create3DBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
 		barGraphForPNG = barChart;
 		ChartPanel chartPanel = new ChartPanel(barChart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
-		frame.setMinimumSize(new java.awt.Dimension(600, 400));
+		chartPanel.setPreferredSize(new Dimension(600, 400));
 		frame.getContentPane().add(chartPanel);
-		frame.pack();
 		return chartPanel;
 	}
 
@@ -251,10 +250,8 @@ public class Gui extends JFrame {
 				Create3DLineChartDataset(), PlotOrientation.VERTICAL, true, true, false);
 		lineChartForPNG = lineChart;
 		ChartPanel chartPanel = new ChartPanel(lineChart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
-		frame.setMinimumSize(new java.awt.Dimension(600, 400));
+		chartPanel.setPreferredSize(new Dimension(600, 400));
 		frame.getContentPane().add(chartPanel);
-		frame.pack();
 		return chartPanel;
 
 	}
@@ -265,6 +262,7 @@ public class Gui extends JFrame {
 		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
 		tabbedPane.addTab("Line Chart", null, AddLineChartToFrame(frame), "Expense/Date");
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		frame.pack();
 	}
 
 	private static void FooterWriteButtonFunctionality(JButton write) {

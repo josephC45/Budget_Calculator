@@ -336,7 +336,6 @@ public class Gui extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				Logger.info("### Window and Program closed.");
-				System.exit(0);
 			}
 
 		});
@@ -354,7 +353,7 @@ public class Gui extends JFrame {
 		ExitWindowAndProgram(frame);
 
 		frame.setSize(new Dimension(800, 600));
-		frame.setLocation(EXIT_ON_CLOSE, ABORT);
+		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.setVisible(true);
 
 	}

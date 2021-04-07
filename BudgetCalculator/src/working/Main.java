@@ -6,7 +6,7 @@ import org.tinylog.Logger;
 public class Main {
 	public static void main(String [] args) {
 		Logger.info("### The program has started.");
-		Gui.CreateGui();
+		Gui.createGui();
 		
 	}
 }

@@ -38,7 +38,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-
 import org.tinylog.Logger;
 
 public class Gui extends JFrame {
@@ -58,18 +57,18 @@ public class Gui extends JFrame {
 	private static final String EXPECTED_EXPENSE = "Expected Expense";
 
 	// Sets the icon of the application in the top left of the window
-	private static void SetWindowIcon(JFrame frame) {
-		Image icon = Toolkit.getDefaultToolkit().getImage("IMAGE OF YOUR CHOOSING");
+	private static void setWindowIcon(JFrame frame) {
+		Image icon = Toolkit.getDefaultToolkit().getImage("C:\\Users\\joeyc\\Pictures\\Wallpapers\\abstract2.png");
 		frame.setIconImage(icon);
 	}
 
-	private static void DisplayErrorMessagePopUp(String message) {
+	private static void displayErrorMessagePopUp(String message) {
 		JOptionPane.showMessageDialog(null, message, "Error!", JOptionPane.ERROR_MESSAGE);
 		JDialog dialog = new JDialog();
 		dialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	private static void CreateBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
+	private static void createBarGraphFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveBarGraphItem = new JMenuItem("Save Bar Graph");
 		saveBarGraphItem.addActionListener(event -> {
 			File barGraphPNG = new File(homeFolder, "monthly_budget_bar_graph.png");
@@ -81,7 +80,7 @@ public class Gui extends JFrame {
 				Logger.error("--- IOException occurred in the CreateFileMenuItemAndEvent method.");
 			} catch (IllegalArgumentException iae) {
 				String iaeMessage = "Make sure to first calculate your budget before attempting to save the bar graph as a png.";
-				DisplayErrorMessagePopUp(iaeMessage);
+				displayErrorMessagePopUp(iaeMessage);
 				Logger.warn("~~~ " + iaeMessage);
 			}
 		});
@@ -90,7 +89,7 @@ public class Gui extends JFrame {
 		fileMenu.add(saveBarGraphItem);
 	}
 
-	private static void CreateLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
+	private static void createLineChartFileMenuItemAndEvent(JMenuBar menuBar, JMenu fileMenu) {
 		JMenuItem saveLineChartItem = new JMenuItem("Save Line Chart");
 		saveLineChartItem.addActionListener(event -> {
 			File lineChartPNG = new File(homeFolder, "monthly_expense_line_chart.png");
@@ -98,10 +97,10 @@ public class Gui extends JFrame {
 				ChartUtilities.saveChartAsPNG(lineChartPNG, lineChartForPNG, pngWidth, pngHeight);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
-				Logger.error("--- IOException occurred in the CreateMenuBar method.");
+				Logger.error("--- IOException occurred in the createMenuBar method.");
 			} catch (IllegalArgumentException iae) {
 				String iaeMessage = "Make sure to first calculate your budget before attempting to save the line chart as a png.";
-				DisplayErrorMessagePopUp(iaeMessage);
+				displayErrorMessagePopUp(iaeMessage);
 				Logger.warn("~~~ " + iaeMessage);
 			}
 			Logger.info("### Line Chart PNG was saved to your home folder.");
@@ -112,7 +111,7 @@ public class Gui extends JFrame {
 		fileMenu.add(saveLineChartItem);
 	}
 
-	private static void CreateAboutMenuItemAndEvent(JMenuBar menuBar, JMenu aboutMenu) {
+	private static void createAboutMenuItemAndEvent(JMenuBar menuBar, JMenu aboutMenu) {
 		JMenuItem manualItem = new JMenuItem("Manual");
 		File manualFile = new File(".\\budgetCalculatorManual.txt");
 		Desktop desktop = Desktop.getDesktop();
@@ -121,7 +120,7 @@ public class Gui extends JFrame {
 				desktop.open(manualFile);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
-				Logger.error("--- IOException occurred in the CreateMenuBar method.");
+				Logger.error("--- IOException occurred in the createMenuBar method.");
 			}
 		});
 
@@ -129,21 +128,21 @@ public class Gui extends JFrame {
 		aboutMenu.add(manualItem);
 	}
 
-	private static void CreateMenuBar(JFrame frame) {
+	private static void createMenuBar(JFrame frame) {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		JMenu aboutMenu = new JMenu("About");
 
-		CreateBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
+		createBarGraphFileMenuItemAndEvent(menuBar, fileMenu);
 		fileMenu.addSeparator();
-		CreateLineChartFileMenuItemAndEvent(menuBar, fileMenu);
+		createLineChartFileMenuItemAndEvent(menuBar, fileMenu);
 
-		CreateAboutMenuItemAndEvent(menuBar, aboutMenu);
+		createAboutMenuItemAndEvent(menuBar, aboutMenu);
 
 		frame.setJMenuBar(menuBar);
 	}
 
-	private static void CreateHeaderUI(JFrame frame) {
+	private static void createHeaderUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Description");
 		JPanel headerPanel = new JPanel();
 		LayoutManager layout = new GridLayout(2, 0, 10, 10);
@@ -154,7 +153,7 @@ public class Gui extends JFrame {
 		frame.getContentPane().add(headerPanel, BorderLayout.BEFORE_FIRST_LINE);
 	}
 
-	private static void AddChooseFileButtonFunctionality(JButton chooseFileButton) {
+	private static void addChooseFileButtonFunctionality(JButton chooseFileButton) {
 		chooseFileButton.addActionListener(e -> {
 			JFileChooser fileToUse = new JFileChooser();
 			int returnVal = fileToUse.showSaveDialog(fileToUse);
@@ -173,7 +172,7 @@ public class Gui extends JFrame {
 		});
 	}
 
-	private static void AddLeftBodyUIFields(JPanel bodyPanel) {
+	private static void addLeftBodyUIFields(JPanel bodyPanel) {
 		JLabel inputTransactionLabel = new JLabel("Transaction:", javax.swing.SwingConstants.LEFT);
 		JLabel fileFieldLabel = new JLabel("File:", javax.swing.SwingConstants.LEFT);
 		JButton chooseFileButton = new JButton("Choose File");
@@ -185,11 +184,11 @@ public class Gui extends JFrame {
 		bodyPanel.add(fileTxtField);
 
 		bodyPanel.add(chooseFileButton);
-		AddChooseFileButtonFunctionality(chooseFileButton);
+		addChooseFileButtonFunctionality(chooseFileButton);
 	}
 
 	// Creates the UI for the body (left side) of the frame.
-	private static void CreateLeftBodyUI(JFrame frame) {
+	private static void createLeftBodyUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Write/Calculate section");
 		JPanel leftBodyPanel = new JPanel();
 
@@ -197,11 +196,11 @@ public class Gui extends JFrame {
 		leftBodyPanel.setLayout(layout);
 		leftBodyPanel.setBorder(border);
 		frame.getContentPane().add(leftBodyPanel, BorderLayout.WEST);
-		AddLeftBodyUIFields(leftBodyPanel);
+		addLeftBodyUIFields(leftBodyPanel);
 
 	}
 
-	private static CategoryDataset Create3DBarChartDataset() {
+	private static CategoryDataset create3DBarChartDataset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		dataset.addValue(Ops.totalMonthlyTransactionGoal[0], "Expense", EXPECTED_EXPENSE);
 		dataset.addValue(Ops.totalMonthlyExpenses[0], "Expense", ACTUAL_EXPENSE);
@@ -218,9 +217,9 @@ public class Gui extends JFrame {
 		return dataset;
 	}
 
-	private static Component AddBarChartToFrame(JFrame frame) {
+	private static Component addBarChartToFrame(JFrame frame) {
 		JFreeChart barChart = ChartFactory.createBarChart3D("Monthly Budget", "Transaction Type", "Dollar Amount",
-				Create3DBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
+				create3DBarChartDataset(), PlotOrientation.VERTICAL, true, true, false);
 		barGraphForPNG = barChart;
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setPreferredSize(new Dimension(600, 400));
@@ -228,7 +227,7 @@ public class Gui extends JFrame {
 		return chartPanel;
 	}
 
-	private static CategoryDataset Create3DLineChartDataset() {
+	private static CategoryDataset create3DLineChartDataset() {
 		String series = "Expense trend over the month";
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -245,9 +244,9 @@ public class Gui extends JFrame {
 		return dataset;
 	}
 
-	private static Component AddLineChartToFrame(JFrame frame) {
+	private static Component addLineChartToFrame(JFrame frame) {
 		JFreeChart lineChart = ChartFactory.createLineChart3D("Monthly Expense Trend", "Date", "Dollar Amount",
-				Create3DLineChartDataset(), PlotOrientation.VERTICAL, true, true, false);
+				create3DLineChartDataset(), PlotOrientation.VERTICAL, true, true, false);
 		lineChartForPNG = lineChart;
 		ChartPanel chartPanel = new ChartPanel(lineChart);
 		chartPanel.setPreferredSize(new Dimension(600, 400));
@@ -257,68 +256,68 @@ public class Gui extends JFrame {
 	}
 
 	// Creates the UI for the body (right side) of the frame
-	private static void CreateRightBodyUI(JFrame frame) {
+	private static void createRightBodyUI(JFrame frame) {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Bar Chart", null, AddBarChartToFrame(frame), "Expected/Actual");
-		tabbedPane.addTab("Line Chart", null, AddLineChartToFrame(frame), "Expense/Date");
+		tabbedPane.addTab("Bar Chart", null, addBarChartToFrame(frame), "Expected/Actual");
+		tabbedPane.addTab("Line Chart", null, addLineChartToFrame(frame), "Expense/Date");
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		frame.pack();
 	}
 
-	private static void FooterWriteButtonFunctionality(JButton write) {
+	private static void footerWriteButtonFunctionality(JButton write) {
 		write.addActionListener(e -> {
 			String transaction = transactionField.getText();
 			try {
-				Ops.WriteTransactionToTxtFile(transaction);
+				Ops.writeTransactionToTxtFile(transaction);
 			} catch (IOException ioe) {
 				Logger.error("--- IOException occurred in the FooterWriteButtonFunctionality method.");
 				ioe.printStackTrace();
 			} catch (StringIndexOutOfBoundsException siobe) {
 				String siobeMessage = "Make sure you supply valid input to the transaction field.";
-				DisplayErrorMessagePopUp(siobeMessage);
+				displayErrorMessagePopUp(siobeMessage);
 				Logger.warn("~~~ " + siobeMessage);
 			} catch (NullPointerException ne) {
 				String neMessage = "Make sure to first supply a valid string and choose the correct txt file.";
-				DisplayErrorMessagePopUp(neMessage);
+				displayErrorMessagePopUp(neMessage);
 				Logger.warn("~~~ " + neMessage);
 			} catch (NumberFormatException nfe) {
 				String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
-				DisplayErrorMessagePopUp(nfeMessage);
+				displayErrorMessagePopUp(nfeMessage);
 				Logger.warn("~~~ " + nfeMessage);
 			}
 			transactionField.setText("");
 		});
 	}
 
-	private static void FooterCalculateButtonFunctionality(JButton calculate, JFrame frame) {
+	private static void footerCalculateButtonFunctionality(JButton calculate, JFrame frame) {
 		calculate.addActionListener(e -> {
 			Logger.info("### Calculating budget...");
 			try {
 				Ops.OpsMainDriver();
-				CreateRightBodyUI(frame);
+				createRightBodyUI(frame);
 			} catch (NullPointerException ne) {
 				String neMessage = "Make sure you have chosen the correct file containing your ESIP info.";
-				DisplayErrorMessagePopUp(neMessage);
+				displayErrorMessagePopUp(neMessage);
 				Logger.warn("~~~ " + neMessage);
 			} catch (NumberFormatException nfe) {
 				String nfeMessage = "Make sure to supply a valid number for the amount and for the date.";
-				DisplayErrorMessagePopUp(nfeMessage);
+				displayErrorMessagePopUp(nfeMessage);
 				Logger.warn("~~~ " + nfeMessage);
 			}
 		});
 	}
 
-	private static void AddFooterButtons(JPanel footerPanel, JFrame frame) {
+	private static void addFooterButtons(JPanel footerPanel, JFrame frame) {
 		JButton writeInputToTxt = new JButton("Write To File");
 		JButton calculateInputToTxt = new JButton("Calculate Budget");
 		footerPanel.add(writeInputToTxt);
 		footerPanel.add(calculateInputToTxt);
 
-		FooterWriteButtonFunctionality(writeInputToTxt);
-		FooterCalculateButtonFunctionality(calculateInputToTxt, frame);
+		footerWriteButtonFunctionality(writeInputToTxt);
+		footerCalculateButtonFunctionality(calculateInputToTxt, frame);
 	}
 
-	private static void CreateFooterUI(JFrame frame) {
+	private static void createFooterUI(JFrame frame) {
 		Border border = BorderFactory.createTitledBorder("Actions");
 		JPanel footerPanel = new JPanel();
 
@@ -328,10 +327,10 @@ public class Gui extends JFrame {
 		footerPanel.add(new JLabel("This is where the buttons to read/write to/from txt and to calculate budget."));
 		footerPanel.setBorder(border);
 		frame.getContentPane().add(footerPanel, BorderLayout.AFTER_LAST_LINE);
-		AddFooterButtons(footerPanel, frame);
+		addFooterButtons(footerPanel, frame);
 	}
 
-	private static void ExitWindowAndProgram(JFrame frame) {
+	private static void exitWindowAndProgram(JFrame frame) {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -343,14 +342,14 @@ public class Gui extends JFrame {
 
 	// Creates the window and calls UI methods to put Header, Body and Footer UI
 	// together.
-	private static void CreateWindowAndUI() {
+	private static void createWindowAndUI() {
 		JFrame frame = new JFrame("Budget App");
-		SetWindowIcon(frame);
-		CreateMenuBar(frame);
-		CreateHeaderUI(frame);
-		CreateLeftBodyUI(frame);
-		CreateFooterUI(frame);
-		ExitWindowAndProgram(frame);
+		setWindowIcon(frame);
+		createMenuBar(frame);
+		createHeaderUI(frame);
+		createLeftBodyUI(frame);
+		createFooterUI(frame);
+		exitWindowAndProgram(frame);
 
 		frame.setSize(new Dimension(800, 600));
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -359,7 +358,7 @@ public class Gui extends JFrame {
 	}
 
 	// Driving method for the Gui class.
-	public static void CreateGui() {
-		CreateWindowAndUI();
+	public static void createGui() {
+		createWindowAndUI();
 	}
 }
